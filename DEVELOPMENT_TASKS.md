@@ -294,7 +294,7 @@
 - [x] **TEST-003** `portfolioService.test.ts`
 - [x] **TEST-004** `exifScrubber.test.ts` (expo-image-manipulator handles EXIF)
 - [x] **TEST-005** 35-item limit test (`itemLimit.test.ts`)
-- [ ] **TEST-006** Currency conversion test
+- [x] **TEST-006** Currency conversion test (`currencyService.test.ts`)
 
 ### Integration Tests
 - [ ] **TEST-007** `scanFlow.test.ts`
@@ -311,7 +311,7 @@
 - [x] **SENT-002** `errorService.ts` - captureException()
 - [x] **SENT-003** `errorService.ts` - setUser()
 - [x] **SENT-004** `errorService.ts` - addBreadcrumb()
-- [ ] **SENT-005** Breadcrumbs in alle services
+- [x] **SENT-005** Breadcrumbs in alle services
 - [x] **SENT-006** Error categorization
 
 ### Performance
@@ -364,8 +364,8 @@
 | Sprint 4 | 19 | [x] 100% |
 | Sprint 5 | 13 | [x] 100% |
 | Sprint 6 | 22 | [x] 100% |
-| Sprint 7 | 35 | [/] 31% |
-| **Totaal** | **229 taken** | **~80% voltooid** |
+| Sprint 7 | 35 | [/] 37% |
+| **Totaal** | **229 taken** | **~82% voltooid** |
 
 ---
 

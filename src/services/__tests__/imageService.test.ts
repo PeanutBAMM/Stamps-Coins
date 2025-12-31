@@ -2,6 +2,11 @@ import { imageService } from '../imageService';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as FileSystem from 'expo-file-system';
 
+// Mock errorService (used for breadcrumbs)
+jest.mock('../errorService', () => ({
+    errorService: { addBreadcrumb: jest.fn() },
+}));
+
 jest.mock('expo-image-manipulator', () => ({
     manipulateAsync: jest.fn(),
     SaveFormat: { JPEG: 'jpeg' }

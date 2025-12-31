@@ -1,5 +1,6 @@
 import { supabase } from '../api/supabase';
 import { Session, User } from '@supabase/supabase-js';
+import { errorService } from './errorService';
 
 export const authService = {
     /**
@@ -24,8 +25,10 @@ export const authService = {
      * Anonymous Sign In (Ghost Mode)
      */
     async signInAnonymously() {
+        errorService.addBreadcrumb({ category: 'auth', message: 'Anonymous sign in started' });
         const { data, error } = await supabase.auth.signInAnonymously();
         if (error) throw error;
+        errorService.setUser(data.user?.id || null);
         return data;
     },
 
@@ -45,11 +48,13 @@ export const authService = {
      * Sign In with Email and Password
      */
     async signIn(email: string, password: string) {
+        errorService.addBreadcrumb({ category: 'auth', message: 'Email sign in started' });
         const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password,
         });
         if (error) throw error;
+        errorService.setUser(data.user?.id || null, email);
         return data;
     },
 
@@ -106,6 +111,8 @@ export const authService = {
      * Sign Out
      */
     async signOut() {
+        errorService.addBreadcrumb({ category: 'auth', message: 'User signed out' });
+        errorService.setUser(null);
         const { error } = await supabase.auth.signOut();
         if (error) throw error;
     },

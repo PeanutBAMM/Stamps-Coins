@@ -1,6 +1,14 @@
 import { authService } from '../authService';
 import { supabase } from '../../api/supabase';
 
+// Mock errorService
+jest.mock('../errorService', () => ({
+    errorService: {
+        addBreadcrumb: jest.fn(),
+        setUser: jest.fn(),
+    },
+}));
+
 jest.mock('../../api/supabase', () => ({
     supabase: {
         auth: {

@@ -1,5 +1,6 @@
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as FileSystem from 'expo-file-system';
+import { errorService } from './errorService';
 
 export interface ProcessedImage {
     uri: string;
@@ -13,6 +14,7 @@ export interface ProcessedImage {
  */
 export const processImage = async (uri: string): Promise<ProcessedImage> => {
     try {
+        errorService.addBreadcrumb({ category: 'scan', message: 'Processing image started' });
         console.log('Processing image:', uri);
 
         // 1. Get original dimensions

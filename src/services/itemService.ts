@@ -1,5 +1,6 @@
 import { supabase } from '../api/supabase';
 import { Item, UpdateItemDTO } from '../types/item.types';
+import { errorService } from './errorService';
 
 export const itemService = {
     /**
