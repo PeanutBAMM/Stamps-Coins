@@ -41,3 +41,7 @@ yarn-error.*
 /android
 
 .env.local
+
+# Documentation and task lists
+DEVELOPMENT_TASKS.md
+STAMPS_COINS_BLUEPRINT.md
