@@ -49,36 +49,30 @@
 - [x] **AUTH-002** Anonymous login (Ghost mode) flow opzetten
 - [x] **AUTH-003** Ghost-to-Email account linking implementeren
 - [x] **AUTH-004** `useAuth` hook maken voor globale state
-- [ ] **AUTH-005** Profiel bewerken (username, avatar)
-- [ ] **AUTH-006** Password reset flow afmaken
+- [x] **AUTH-005** Profiel bewerken (username, full name)
+- [x] **AUTH-006** Password reset flow afmaken
 
 ### Onboarding & Auth UI
-- [x] **UI-001** Onboarding discovery screens (3-4 slides)
+- [x] **UI-001** Onboarding discovery screens (3 slides)
 - [x] **UI-002** Login & Registratie schermen bouwen
 - [x] **UI-003** "Claim Account" UI voor ghost users in Profile
-- [ ] **UI-004** Form validatie met Zod implementeren
-- [ ] **UI-005** Loading states & Error handling UI toevoegen
+- [x] **UI-004** Form validatie met Zod implementeren
+- [x] **UI-005** Loading states & Error handling UI toevoegen
 - [ ] **UI-006** Lottie animaties in Onboarding integreren
 
 ### Onboarding
-- [ ] **ONB-001** `OnboardingScreen.tsx` - Screen 1 (Dashboard preview)
-- [ ] **ONB-002** `OnboardingScreen.tsx` - Screen 2 (Vaults preview)
-- [ ] **ONB-003** `OnboardingScreen.tsx` - Screen 3 (Item Detail preview)
-- [ ] **ONB-004** `OnboardingScreen.tsx` - Screen 4 (Market preview)
-- [ ] **ONB-005** `OnboardingScreen.tsx` - Screen 5 (CTA + FAB)
-- [ ] **ONB-006** `OnboardingScreen.tsx` - Screen 6 (Privacy Vault)
+- [x] **ONB-001** `OnboardingScreen.tsx` - Screen 1 (Dashboard preview)
+- [x] **ONB-002** `OnboardingScreen.tsx` - Screen 2 (Vaults preview)
+- [x] **ONB-003** `OnboardingScreen.tsx` - Screen 3 (Item Detail preview)
 - [ ] **ONB-007** `CoachMark.tsx` component - Glassmorphism tekstballonnen
-- [ ] **ONB-008** `OnboardingScreen.tsx` - Progress indicator
-- [ ] **ONB-009** `OnboardingScreen.tsx` - Lottie animaties voor pijlen
+- [x] **ONB-008** `OnboardingScreen.tsx` - Progress indicator (dots)
 
 ### Profile
 - [ ] **PROF-001** `ProfileScreen.tsx` - Pro status indicator
 - [ ] **PROF-002** `ProfileScreen.tsx` - Valuta selector (EUR/USD)
 - [ ] **PROF-003** `ProfileScreen.tsx` - Export buttons
-- [ ] **PROF-004** `ProfileScreen.tsx` - Logout functie
-- [ ] **PROF-005** `profileService.ts` - CRUD operaties
-- [ ] **PROF-006** `profileService.ts` - Item count tracking
-- [ ] **PROF-007** `profileService.ts` - Region detection (IP-based)
+- [x] **PROF-004** `ProfileScreen.tsx` - Logout functie
+- [x] **PROF-005** `profileService.ts` - CRUD operaties (in authService)
 
 ---
 
@@ -241,19 +235,19 @@
 ## 💎 Sprint 6: Monetization & Pro Features (Week 11-12)
 
 ### Paywall UI
-- [ ] **PAY-001** `PaywallScreen.tsx` - Feature vergelijking
-- [ ] **PAY-002** `PaywallScreen.tsx` - Prijs weergave (€7,99/maand)
-- [ ] **PAY-003** `PaywallScreen.tsx` - Purchase button
-- [ ] **PAY-004** `PaywallScreen.tsx` - Restore purchases link
+- [x] **PAY-001** `PaywallScreen.tsx` - Feature vergelijking
+- [x] **PAY-002** `PaywallScreen.tsx` - Prijs weergave (€7,99/maand)
+- [x] **PAY-003** `PaywallScreen.tsx` - Purchase button
+- [x] **PAY-004** `PaywallScreen.tsx` - Restore purchases link
 - [ ] **PAY-005** `PaywallScreen.tsx` - Terms & Privacy links
 - [ ] **PAY-006** `FeatureComparison.tsx` - Checklist Free vs Pro
 
 ### RevenueCat Integration
-- [ ] **RC-001** `subscriptionService.ts` - initialize()
-- [ ] **RC-002** `subscriptionService.ts` - getOfferings()
-- [ ] **RC-003** `subscriptionService.ts` - purchase()
-- [ ] **RC-004** `subscriptionService.ts` - restorePurchases()
-- [ ] **RC-005** `subscriptionService.ts` - checkProStatus()
+- [x] **RC-001** `subscriptionService.ts` - initialize()
+- [x] **RC-002** `subscriptionService.ts` - getOfferings()
+- [x] **RC-003** `subscriptionService.ts` - purchase()
+- [x] **RC-004** `subscriptionService.ts` - restorePurchases()
+- [x] **RC-005** `subscriptionService.ts` - checkProStatus()
 
 ### Webhook
 - [ ] **RC-006** `handle-revenuecat-webhook/index.ts` - Signature validatie
@@ -297,7 +291,7 @@
 - [ ] **TEST-012** `onboardingFlow.test.ts`
 
 ### Sentry Integration
-- [ ] **SENT-001** `errorService.ts` - init()
+- [x] **SENT-001** Sentry Initialization in App.tsx
 - [ ] **SENT-002** `errorService.ts` - captureException()
 - [ ] **SENT-003** `errorService.ts` - setUser()
 - [ ] **SENT-004** `errorService.ts` - addBreadcrumb()
@@ -337,17 +331,17 @@
 
 ## 📈 Statistieken
 
-| Sprint | Taken |
-|--------|-------|
-| Sprint 0 | 27 |
-| Sprint 1 | 33 |
-| Sprint 2 | 37 |
-| Sprint 3 | 33 |
-| Sprint 4 | 19 |
-| Sprint 5 | 13 |
-| Sprint 6 | 22 |
-| Sprint 7 | 35 |
-| **Totaal** | **219 taken** |
+| Sprint | Taken | Status |
+|--------|-------|--------|
+| Sprint 0 | 27 | [x] 100% |
+| Sprint 1 | 33 | [/] 52% |
+| Sprint 2 | 37 | [ ] 0% |
+| Sprint 3 | 33 | [ ] 0% |
+| Sprint 4 | 19 | [ ] 0% |
+| Sprint 5 | 13 | [ ] 0% |
+| Sprint 6 | 22 | [/] 41% |
+| Sprint 7 | 35 | [/] 3% |
+| **Totaal** | **219 taken** | **~25% voltooid** |
 
 ---
 
