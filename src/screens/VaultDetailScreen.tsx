@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity, Image, TextInput } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { Image } from 'expo-image';
 import { useFocusEffect } from '@react-navigation/native';
 import { theme } from '../constants/theme';
 import { itemService } from '../services/itemService';
@@ -42,7 +43,13 @@ export default function VaultDetailScreen({ route, navigation }: any) {
                     style={styles.gridItem}
                     onPress={() => navigation.navigate('ItemDetail', { itemId: item.id })}
                 >
-                    <Image source={{ uri: item.image_url }} style={styles.gridImage} />
+                    <Image
+                        source={{ uri: item.image_url }}
+                        style={styles.gridImage}
+                        contentFit="cover"
+                        transition={200}
+                        cachePolicy="memory-disk"
+                    />
                     <View style={styles.gridContent}>
                         <Text style={styles.itemName} numberOfLines={1}>{item.name}</Text>
                         <Text style={styles.itemPrice}>€ {item.current_price?.toFixed(2) || '0.00'}</Text>
@@ -56,7 +63,13 @@ export default function VaultDetailScreen({ route, navigation }: any) {
                 style={styles.listItem}
                 onPress={() => navigation.navigate('ItemDetail', { itemId: item.id })}
             >
-                <Image source={{ uri: item.image_url }} style={styles.listImage} />
+                <Image
+                    source={{ uri: item.image_url }}
+                    style={styles.listImage}
+                    contentFit="cover"
+                    transition={200}
+                    cachePolicy="memory-disk"
+                />
                 <View style={styles.listContent}>
                     <Text style={styles.itemName}>{item.name}</Text>
                     <Text style={styles.itemDescription} numberOfLines={1}>{item.description}</Text>

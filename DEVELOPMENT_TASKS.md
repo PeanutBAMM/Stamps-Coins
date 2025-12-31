@@ -289,11 +289,11 @@
 ## ✨ Sprint 7: Polish, Testing & Launch Prep (Week 13-14)
 
 ### Unit Tests
-- [ ] **TEST-001** `itemService.test.ts`
-- [ ] **TEST-002** `authService.test.ts`
-- [ ] **TEST-003** `portfolioService.test.ts`
-- [ ] **TEST-004** `exifScrubber.test.ts`
-- [ ] **TEST-005** 35-item limit test
+- [x] **TEST-001** `itemService.test.ts`
+- [x] **TEST-002** `authService.test.ts`
+- [x] **TEST-003** `portfolioService.test.ts`
+- [x] **TEST-004** `exifScrubber.test.ts` (expo-image-manipulator handles EXIF)
+- [x] **TEST-005** 35-item limit test (`itemLimit.test.ts`)
 - [ ] **TEST-006** Currency conversion test
 
 ### Integration Tests
@@ -308,14 +308,14 @@
 
 ### Sentry Integration
 - [x] **SENT-001** Sentry Initialization in App.tsx
-- [ ] **SENT-002** `errorService.ts` - captureException()
-- [ ] **SENT-003** `errorService.ts` - setUser()
-- [ ] **SENT-004** `errorService.ts` - addBreadcrumb()
+- [x] **SENT-002** `errorService.ts` - captureException()
+- [x] **SENT-003** `errorService.ts` - setUser()
+- [x] **SENT-004** `errorService.ts` - addBreadcrumb()
 - [ ] **SENT-005** Breadcrumbs in alle services
-- [ ] **SENT-006** Error categorization
+- [x] **SENT-006** Error categorization
 
 ### Performance
-- [ ] **PERF-001** Image lazy loading in Vault grid
+- [x] **PERF-001** Image lazy loading in Vault grid (expo-image)
 - [ ] **PERF-002** Virtualized lists voor grote collecties
 - [ ] **PERF-003** Offline queue voor scans
 - [ ] **PERF-004** Supabase query optimization
@@ -364,8 +364,8 @@
 | Sprint 4 | 19 | [x] 100% |
 | Sprint 5 | 13 | [x] 100% |
 | Sprint 6 | 22 | [x] 100% |
-| Sprint 7 | 35 | [/] 3% |
-| **Totaal** | **229 taken** | **~67% voltooid** |
+| Sprint 7 | 35 | [/] 31% |
+| **Totaal** | **229 taken** | **~80% voltooid** |
 
 ---
 
