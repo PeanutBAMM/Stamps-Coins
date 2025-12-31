@@ -2,6 +2,18 @@ import { itemService } from '../services/itemService';
 import { supabase } from '../api/supabase';
 import { mockStampMint, mockCoinGold, mockStampCollection } from './fixtures';
 
+// Mock dependencies
+jest.mock('../services/queryOptimizer', () => ({
+    queryOptimizer: {
+        getFromCache: jest.fn().mockResolvedValue(null),
+        setCache: jest.fn(),
+    },
+}));
+
+jest.mock('../services/errorService', () => ({
+    errorService: { addBreadcrumb: jest.fn() },
+}));
+
 // Mock Supabase
 jest.mock('../api/supabase', () => ({
     supabase: {

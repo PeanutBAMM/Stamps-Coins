@@ -1,12 +1,21 @@
 import { supabase } from '../api/supabase';
 import { Item, UpdateItemDTO } from '../types/item.types';
 import { errorService } from './errorService';
+import { queryOptimizer } from './queryOptimizer';
 
 export const itemService = {
     /**
      * Get all items for a specific vault
+     * Uses caching for performance optimization
      */
     async getItemsByVault(vaultId: string): Promise<Item[]> {
+        const cacheKey = `items_vault_${vaultId}`;
+
+        // Check cache first
+        const cached = await queryOptimizer.getFromCache<Item[]>(cacheKey);
+        if (cached) return cached;
+
+        // Fetch from database
         const { data, error } = await supabase
             .from('items')
             .select('*')
@@ -14,6 +23,10 @@ export const itemService = {
             .order('created_at', { ascending: false });
 
         if (error) throw error;
+
+        // Cache result for 1 minute
+        await queryOptimizer.setCache(cacheKey, data, 60000);
+
         return data;
     },
 

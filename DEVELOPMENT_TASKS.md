@@ -318,7 +318,7 @@
 - [x] **PERF-001** Image lazy loading in Vault grid (expo-image)
 - [x] **PERF-002** Virtualized lists voor grote collecties (FlatList optimized)
 - [x] **PERF-003** Offline queue voor scans (`offlineQueueService.ts`)
-- [ ] **PERF-004** Supabase query optimization
+- [x] **PERF-004** Supabase query optimization (`queryOptimizer.ts`)
 
 ### App Store Prep
 - [ ] **STORE-001** App icon (1024x1024)
@@ -364,8 +364,8 @@
 | Sprint 4 | 19 | [x] 100% |
 | Sprint 5 | 13 | [x] 100% |
 | Sprint 6 | 22 | [x] 100% |
-| Sprint 7 | 35 | [/] 63% |
-| **Totaal** | **229 taken** | **~91% voltooid** |
+| Sprint 7 | 35 | [/] 66% |
+| **Totaal** | **229 taken** | **~92% voltooid** |
 
 ---
 
