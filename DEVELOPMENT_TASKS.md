@@ -1,4 +1,4 @@
-# 📋 Stamps & Coins - Development Task List
+ # 📋 Stamps & Coins - Development Task List
 
 > **Gerelateerd:** [Blueprint](file:///c:/Users/peanu/.gemini/antigravity/scratch/Stamps%20&%20Coins/STAMPS_COINS_BLUEPRINT.md) | [Implementation Plan](file:///C:/Users/peanu/.gemini/antigravity/brain/d7d3a14c-e92b-4333-9a4c-cb627b638045/implementation_plan.md)
 
@@ -83,52 +83,64 @@
 ## 📸 Sprint 2: Core Scanner & AI Integration (Week 4-5)
 
 ### Camera & Image Processing
-- [ ] **SCAN-001** `ScannerScreen.tsx` - Camera view setup
-- [ ] **SCAN-002** `ScannerScreen.tsx` - Capture button (FAB)
-- [ ] **SCAN-003** `ScannerScreen.tsx` - Thumbnail laatste scan
-- [ ] **SCAN-004** `AROverlay.tsx` - Randdetectie visualisatie
-- [ ] **SCAN-005** `AROverlay.tsx` - Bounding box preview
-- [ ] **SCAN-006** `AROverlay.tsx` - Item count indicator (bulk)
-- [ ] **SCAN-007** Real-time feedback UI ("Houd stil...", "Meer licht...")
+- [x] **SCAN-001** `ScannerScreen.tsx` - Camera view setup
+- [x] **SCAN-002** `ScannerScreen.tsx` - Capture button (FAB)
+- [x] **SCAN-003** `ScannerScreen.tsx` - Thumbnail laatste scan
+- [x] **SCAN-004** `AROverlay.tsx` - Randdetectie visualisatie
+- [x] **SCAN-005** `AROverlay.tsx` - Bounding box preview
+- [x] **SCAN-006** `AROverlay.tsx` - Item count indicator (bulk)
+- [x] **SCAN-007** Real-time feedback UI ("Houd stil...", "Meer licht...")
 
 ### Image Service
-- [ ] **IMG-001** `imageService.ts` - captureImage()
-- [ ] **IMG-002** `imageService.ts` - compressImage() (max 1080px)
-- [ ] **IMG-003** `imageService.ts` - stripExifData() (GPS removal)
-- [ ] **IMG-004** `imageService.ts` - uploadToCloudinary()
-- [ ] **IMG-005** Server-side EXIF check in Edge Function
+- [x] **IMG-001** `imageService.ts` - captureImage()
+- [x] **IMG-002** `imageService.ts` - compressImage() (max 1080px)
+- [x] **IMG-003** `imageService.ts` - stripExifData() (GPS removal)
+- [x] **IMG-004** `imageService.ts` - uploadToCloudinary()
+- [x] **IMG-005** Server-side EXIF check in Edge Function
 
 ### Edge Functions
-- [ ] **EF-001** `process-scan/index.ts` - Receive Cloudinary URL
-- [ ] **EF-002** `process-scan/index.ts` - Send to Gemini 3 Flash
-- [ ] **EF-003** `process-scan/index.ts` - Parse JSON response
-- [ ] **EF-004** `process-scan/index.ts` - Check/create global_asset
-- [ ] **EF-005** `process-scan/index.ts` - Save to items table
-- [ ] **EF-006** `process-scan/index.ts` - Rate limiting (35/hour)
-- [ ] **EF-007** `get-market-price/index.ts` - Cache check (7 dagen)
-- [ ] **EF-008** `get-market-price/index.ts` - Google Search Grounding
-- [ ] **EF-009** `get-market-price/index.ts` - Update market_prices
-- [ ] **EF-010** `get-market-price/index.ts` - Continent-based prompts
+- [x] **EF-001** `process-scan/index.ts` - Receive Cloudinary URL
+- [x] **EF-002** `process-scan/index.ts` - Send to Gemini 3 Flash
+- [x] **EF-003** `process-scan/index.ts` - Parse JSON response
+- [x] **EF-004** `process-scan/index.ts` - Check/create global_asset
+- [x] **EF-005** `process-scan/index.ts` - Save to items table
+- [x] **EF-006** `process-scan/index.ts` - Rate limiting (35/hour)
+- [x] **EF-007** `get-market-price/index.ts` - Cache check (7 dagen)
+- [x] **EF-008** `get-market-price/index.ts` - Google Search Grounding
+- [x] **EF-009** `get-market-price/index.ts` - Update market_prices
+- [x] **EF-010** `get-market-price/index.ts` - Continent-based prompts
 
 ### AI Service
-- [ ] **AI-001** `aiService.ts` - identifyItem()
-- [ ] **AI-002** `aiService.ts` - getMarketPrice()
-- [ ] **AI-003** `aiService.ts` - batchIdentify() (bounding boxes)
-- [ ] **AI-004** `ai.types.ts` - TypeScript interfaces voor AI responses
+- [x] **AI-001** `aiService.ts` - identifyItem()
+- [x] **AI-002** `aiService.ts` - getMarketPrice()
+- [x] **AI-003** `aiService.ts` - batchIdentify() (bounding boxes)
+- [x] **AI-004** `ai.types.ts` - TypeScript interfaces voor AI responses
 
 ### Processing UI
-- [ ] **PROC-001** `ProcessingDock.tsx` - Floating progress bar
-- [ ] **PROC-002** `ProcessingDock.tsx` - Thumbnail preview
-- [ ] **PROC-003** `ProcessingDock.tsx` - Items counter
-- [ ] **PROC-004** `SkeletonCard.tsx` - Placeholder voor items
-- [ ] **PROC-005** `SkeletonCard.tsx` - Shimmer animatie
+- [x] **PROC-001** `ProcessingDock.tsx` - Floating progress bar
+- [x] **PROC-002** `ProcessingDock.tsx` - Thumbnail preview
+- [x] **PROC-003** `ProcessingDock.tsx` - Items counter
+- [x] **PROC-004** `SkeletonCard.tsx` - Placeholder voor items
+- [x] **PROC-005** `SkeletonCard.tsx` - Shimmer animatie
 
 ### Error Handling
-- [ ] **ERR-001** "Foto onduidelijk" toast
-- [ ] **ERR-002** "Offline, lokaal opgeslagen" toast
-- [ ] **ERR-003** "Item niet herkend" toast
-- [ ] **ERR-004** "Kluis vol" paywall trigger
-- [ ] **ERR-005** Confidence < 80% gele indicator
+- [x] **ERR-001** "Foto onduidelijk" toast
+- [x] **ERR-002** "Offline, lokaal opgeslagen" toast
+- [x] **ERR-003** "Item niet herkend" toast
+- [x] **ERR-004** "Kluis vol" paywall trigger
+- [x] **ERR-005** Confidence < 80% gele indicator
+
+### Testing & Verification
+- [x] **TEST-001** `imageService.test.ts` - Unit tests for processing
+- [x] **TEST-002** `cloudinaryService.test.ts` - Unit tests for upload (mocked)
+- [x] **TEST-003** `aiService.test.ts` - Unit tests for AI flow (mocked)
+- [x] **TEST-004** `App.test.tsx` (Sprint 0) - Smoke test
+- [x] **TEST-005** `OnboardingScreen.test.tsx` (Sprint 1) - View states
+- [x] **TEST-006** `LoginScreen.test.tsx` (Sprint 1) - Input handling
+- [x] **TEST-007** `CoachMark.test.tsx` (Sprint 1) - Visibility logic
+- [x] **TEST-008** `ProcessingDock.test.tsx` (Sprint 2) - Progress states
+- [x] **TEST-009** `AROverlay.test.tsx` (Sprint 2) - Overlay markers
+- [x] **TEST-010** Run `npm test` and verify all tests pass (28/28 passed)
 
 ---
 
@@ -339,13 +351,13 @@
 |--------|-------|--------|
 | Sprint 0 | 27 | [x] 100% |
 | Sprint 1 | 33 | [x] 100% |
-| Sprint 2 | 37 | [ ] 0% |
+| Sprint 2 | 47 | [x] 100% |
 | Sprint 3 | 33 | [ ] 0% |
 | Sprint 4 | 19 | [ ] 0% |
 | Sprint 5 | 13 | [ ] 0% |
 | Sprint 6 | 22 | [/] 41% |
 | Sprint 7 | 35 | [/] 3% |
-| **Totaal** | **219 taken** | **~30% voltooid** |
+| **Totaal** | **229 taken** | **~52% voltooid** |
 
 ---
 

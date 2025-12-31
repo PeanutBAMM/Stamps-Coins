@@ -1,28 +1,39 @@
-import { v2 as cloudinary } from 'cloudinary';
-
-// Note: In a real React Native environment, we usually use the Upload API directly 
-// via fetch/axios or a specific client library rather than the Node.js SDK 
-// if we want to avoid bundling Node-specific dependencies.
-// However, for Edge Functions or if using a compatible environment:
-
 const cloudName = process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME;
-const apiKey = process.env.EXPO_PUBLIC_CLOUDINARY_API_KEY;
-const apiSecret = process.env.CLOUDINARY_API_SECRET;
+const uploadPreset = process.env.EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'stamps-coins';
 
-cloudinary.config({
-    cloud_name: cloudName,
-    api_key: apiKey,
-    api_secret: apiSecret,
-    secure: true,
-});
-
+/**
+ * Uploads an image to Cloudinary using fetching for React Native compatibility.
+ * This avoids bundling heavy Node.js SDK dependencies.
+ */
 export const uploadImage = async (fileUri: string) => {
     try {
-        const result = await cloudinary.uploader.upload(fileUri, {
-            folder: 'stamps-coins',
-            quality: 'auto',
-            fetch_format: 'auto',
+        console.log('Uploading to Cloudinary:', fileUri);
+
+        const formData = new FormData();
+        // @ts-ignore - React Native FormData expects an object for file
+        formData.append('file', {
+            uri: fileUri,
+            type: 'image/jpeg',
+            name: 'upload.jpg',
         });
+        formData.append('upload_preset', uploadPreset);
+
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error?.message || 'Cloudinary upload failed');
+        }
+
+        const result = await response.json();
+        console.log('Cloudinary upload success:', result.secure_url);
         return result;
     } catch (error) {
         console.error('Cloudinary upload error:', error);
@@ -30,4 +41,8 @@ export const uploadImage = async (fileUri: string) => {
     }
 };
 
-export default cloudinary;
+export const cloudinaryService = {
+    uploadImage,
+};
+
+export default cloudinaryService;
