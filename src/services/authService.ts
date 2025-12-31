@@ -67,6 +67,42 @@ export const authService = {
     },
 
     /**
+   * Update User Metadata (Shared across ghost and email users)
+   */
+    async updateMetadata(metadata: Record<string, any>) {
+        const { data, error } = await supabase.auth.updateUser({
+            data: metadata,
+        });
+        if (error) throw error;
+        return data;
+    },
+
+    /**
+     * Get Profile from database
+     */
+    async getProfile(userId: string) {
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', userId)
+            .single();
+        if (error) throw error;
+        return data;
+    },
+
+    /**
+     * Update Profile in database
+     */
+    async updateProfile(userId: string, updates: any) {
+        const { data, error } = await supabase
+            .from('profiles')
+            .update(updates)
+            .eq('id', userId);
+        if (error) throw error;
+        return data;
+    },
+
+    /**
      * Sign Out
      */
     async signOut() {

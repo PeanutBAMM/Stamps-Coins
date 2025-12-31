@@ -64,15 +64,19 @@
 - [x] **ONB-001** `OnboardingScreen.tsx` - Screen 1 (Dashboard preview)
 - [x] **ONB-002** `OnboardingScreen.tsx` - Screen 2 (Vaults preview)
 - [x] **ONB-003** `OnboardingScreen.tsx` - Screen 3 (Item Detail preview)
-- [ ] **ONB-007** `CoachMark.tsx` component - Glassmorphism tekstballonnen
+- [x] **ONB-004** `OnboardingScreen.tsx` - Screen 4 (Market preview)
+- [x] **ONB-005** `OnboardingScreen.tsx` - Screen 5 (Privacy & CTA)
+- [x] **ONB-007** `CoachMark.tsx` component - Glassmorphism tekstballonnen
 - [x] **ONB-008** `OnboardingScreen.tsx` - Progress indicator (dots)
 
 ### Profile
-- [ ] **PROF-001** `ProfileScreen.tsx` - Pro status indicator
-- [ ] **PROF-002** `ProfileScreen.tsx` - Valuta selector (EUR/USD)
-- [ ] **PROF-003** `ProfileScreen.tsx` - Export buttons
+- [x] **PROF-001** `ProfileScreen.tsx` - Pro status indicator
+- [x] **PROF-002** `ProfileScreen.tsx` - Valuta selector (EUR/USD)
+- [x] **PROF-003** `ProfileScreen.tsx` - Export buttons (Placeholders)
 - [x] **PROF-004** `ProfileScreen.tsx` - Logout functie
-- [x] **PROF-005** `profileService.ts` - CRUD operaties (in authService)
+- [x] **PROF-005** `profileService.ts` - CRUD operaties
+- [x] **PROF-006** `profileService.ts` - Item count tracking
+- [x] **PROF-007** `profileService.ts` - Region detection (Auto-detect)
 
 ---
 
@@ -334,14 +338,14 @@
 | Sprint | Taken | Status |
 |--------|-------|--------|
 | Sprint 0 | 27 | [x] 100% |
-| Sprint 1 | 33 | [/] 52% |
+| Sprint 1 | 33 | [x] 100% |
 | Sprint 2 | 37 | [ ] 0% |
 | Sprint 3 | 33 | [ ] 0% |
 | Sprint 4 | 19 | [ ] 0% |
 | Sprint 5 | 13 | [ ] 0% |
 | Sprint 6 | 22 | [/] 41% |
 | Sprint 7 | 35 | [/] 3% |
-| **Totaal** | **219 taken** | **~25% voltooid** |
+| **Totaal** | **219 taken** | **~30% voltooid** |
 
 ---
 
