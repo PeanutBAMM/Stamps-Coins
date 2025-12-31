@@ -19,10 +19,13 @@ jest.mock('lucide-react-native', () => ({
     Trash2: () => 'Trash2',
     Edit2: () => 'Edit2',
     FolderInput: () => 'FolderInput',
-    // Add others as needed
+    Clock: () => 'Clock',
+    ExternalLink: () => 'ExternalLink',
+    TrendingUp: () => 'TrendingUp',
+    TrendingDown: () => 'TrendingDown',
+    AlertTriangle: () => 'AlertTriangle',
 }));
 
-// Mock Reanimated
 // Mock Reanimated
 jest.mock('react-native-reanimated', () => ({
     default: {
@@ -44,3 +47,18 @@ jest.mock('react-native-gesture-handler', () => {
         Directions: {},
     };
 });
+
+// Mock Expo Blur
+jest.mock('expo-blur', () => ({
+    BlurView: 'View',
+}));
+
+// Mock Expo Image
+jest.mock('expo-image', () => ({
+    Image: 'Image',
+}));
+
+// Mock Expo Linear Gradient
+jest.mock('expo-linear-gradient', () => ({
+    LinearGradient: 'View',
+}));

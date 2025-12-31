@@ -22,13 +22,17 @@ const MOCK_NEWS = [
     }
 ];
 
-export const NewsCarousel: React.FC = () => {
+interface NewsCarouselProps {
+    onMorePress?: () => void;
+}
+
+export const NewsCarousel: React.FC<NewsCarouselProps> = ({ onMorePress }) => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.headerTitle}>Markt Nieuws</Text>
-                <TouchableOpacity>
-                    <Text style={styles.seeAll}>Alles zien</Text>
+                <Text style={styles.title}>Market News</Text>
+                <TouchableOpacity onPress={onMorePress}>
+                    <Text style={styles.seeAll}>View All</Text>
                 </TouchableOpacity>
             </View>
 

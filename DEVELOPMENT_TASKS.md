@@ -221,29 +221,29 @@
 - [x] **PORT-004** `portfolioService.ts` - recordDailySnapshot()
 
 ### Edge Function
-- [ ] **PORT-005** `daily-snapshot/index.ts` - Cronjob configuratie
-- [ ] **PORT-006** `daily-snapshot/index.ts` - Portfolio berekening per user
-- [ ] **PORT-007** `daily-snapshot/index.ts` - Insert in portfolio_history
+- [x] **PORT-005** `daily-snapshot/index.ts` - Cronjob configuratie
+- [x] **PORT-006** `daily-snapshot/index.ts` - Portfolio berekening per user
+- [x] **PORT-007** `daily-snapshot/index.ts` - Insert in portfolio_history
 
 ---
 
 ## 📰 Sprint 5: Market Insights & News Feed (Week 10)
 
 ### News Feed UI
-- [ ] **NEWS-001** `MarketScreen.tsx` - Nieuwsfeed lijst
-- [ ] **NEWS-002** `MarketScreen.tsx` - Pull-to-refresh
-- [ ] **NEWS-003** `MarketScreen.tsx` - Category filters
-- [ ] **NEWS-004** `NewsCard.tsx` - Afbeelding (+ fallback)
-- [ ] **NEWS-005** `NewsCard.tsx` - Titel
-- [ ] **NEWS-006** `NewsCard.tsx` - Samenvatting
-- [ ] **NEWS-007** `NewsCard.tsx` - Bron badge
-- [ ] **NEWS-008** `PriceAlert.tsx` - Speciale kaart voor prijswijzigingen
+- [x] **NEWS-001** `MarketScreen.tsx` - Nieuwsfeed lijst
+- [x] **NEWS-002** `MarketScreen.tsx` - Pull-to-refresh
+- [x] **NEWS-003** `MarketScreen.tsx` - Category filters
+- [x] **NEWS-004** `NewsCard.tsx` - Afbeelding (+ fallback)
+- [x] **NEWS-005** `NewsCard.tsx` - Titel
+- [x] **NEWS-006** `NewsCard.tsx` - Samenvatting
+- [x] **NEWS-007** `NewsCard.tsx` - Bron badge
+- [x] **NEWS-008** `PriceAlert.tsx` - Speciale kaart voor prijswijzigingen
 
 ### Edge Function
-- [ ] **NEWS-009** `news_feed` tabel aanmaken in Supabase
-- [ ] **NEWS-010** `generate-news-feed/index.ts` - RSS scraping
-- [ ] **NEWS-011** `generate-news-feed/index.ts` - Gemini filtering/samenvatting
-- [ ] **NEWS-012** `generate-news-feed/index.ts` - Opslaan in database
+- [x] **NEWS-009** `news_feed` tabel aanmaken in Supabase
+- [x] **NEWS-010** `generate-news-feed/index.ts` - RSS scraping
+- [x] **NEWS-011** `generate-news-feed/index.ts` - Gemini filtering/samenvatting
+- [x] **NEWS-012** `generate-news-feed/index.ts` - Opslaan in database
 - [ ] **NEWS-013** Cronjob configuratie (elke 6 uur)
 
 ---
@@ -362,7 +362,7 @@
 | Sprint 2 | 47 | [x] 100% |
 | Sprint 3 | 33 | [x] 100% |
 | Sprint 4 | 19 | [x] 100% |
-| Sprint 5 | 13 | [ ] 0% |
+| Sprint 5 | 13 | [/] 92% |
 | Sprint 6 | 22 | [/] 41% |
 | Sprint 7 | 35 | [/] 3% |
 | **Totaal** | **229 taken** | **~67% voltooid** |

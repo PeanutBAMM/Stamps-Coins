@@ -79,7 +79,7 @@ const DashboardScreen = () => {
                     onItemPress={(id) => navigation.navigate('ItemDetail', { id })}
                 />
 
-                <NewsCarousel />
+                <NewsCarousel onMorePress={() => navigation.navigate('Market')} />
 
                 {/* Simple Spacer for FAB */}
                 <View style={{ height: 80 }} />
