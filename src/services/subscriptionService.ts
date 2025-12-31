@@ -7,7 +7,7 @@ import Purchases, {
 } from 'react-native-purchases';
 import { Platform } from 'react-native';
 
-const REVENUECAT_API_KEY = 'test_TTCIWCoHNIIuJApltnPOXPUVvva'; // In production use EXPO_PUBLIC_...
+const REVENUECAT_API_KEY = process.env.EXPO_PUBLIC_REVENUECAT_API_KEY || '';
 const ENTITLEMENT_ID = 'Stamps & Coins Pro';
 
 export const subscriptionService = {

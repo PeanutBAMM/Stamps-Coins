@@ -9,6 +9,9 @@ dist/
 web-build/
 expo-env.d.ts
 
+# Jest coverage
+coverage/
+
 # Native
 .kotlin/
 *.orig.*
@@ -31,6 +34,7 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
 .env*.local
 
 # typescript
@@ -39,8 +43,6 @@ yarn-error.*
 # generated native folders
 /ios
 /android
-
-.env.local
 
 # Documentation and task lists
 CLI_TOOLS_GUIDE.md

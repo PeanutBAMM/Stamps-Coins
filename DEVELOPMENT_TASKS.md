@@ -147,48 +147,48 @@
 ## 🗄️ Sprint 3: Vault System & Item Management (Week 6-7)
 
 ### Vault Management
-- [ ] **VAULT-001** `VaultsScreen.tsx` - Lijst van alle vaults
-- [ ] **VAULT-002** `VaultsScreen.tsx` - "Nieuwe kluis" button
-- [ ] **VAULT-003** `VaultsScreen.tsx` - Vault waarde subtotalen
-- [ ] **VAULT-004** `VaultsScreen.tsx` - Swipe-to-delete
-- [ ] **VAULT-005** `VaultDetailScreen.tsx` - Grid/lijst toggle
-- [ ] **VAULT-006** `VaultDetailScreen.tsx` - Filter chips
-- [ ] **VAULT-007** `VaultDetailScreen.tsx` - Zoekbalk
-- [ ] **VAULT-008** `VaultDetailScreen.tsx` - Items grid/lijst
-- [ ] **VAULT-009** `vaultService.ts` - getVaults()
-- [ ] **VAULT-010** `vaultService.ts` - createVault()
-- [ ] **VAULT-011** `vaultService.ts` - updateVault()
-- [ ] **VAULT-012** `vaultService.ts` - deleteVault()
-- [ ] **VAULT-013** `vaultService.ts` - moveItem()
+- [x] **VAULT-001** `VaultsScreen.tsx` - Lijst van alle vaults
+- [x] **VAULT-002** `VaultsScreen.tsx` - "Nieuwe kluis" button
+- [x] **VAULT-003** `VaultsScreen.tsx` - Vault waarde subtotalen
+- [x] **VAULT-004** `VaultsScreen.tsx` - Swipe-to-delete
+- [x] **VAULT-005** `VaultDetailScreen.tsx` - Grid/lijst toggle
+- [x] **VAULT-006** `VaultDetailScreen.tsx` - Filter chips
+- [x] **VAULT-007** `VaultDetailScreen.tsx` - Zoekbalk
+- [x] **VAULT-008** `VaultDetailScreen.tsx` - Items grid/lijst
+- [x] **VAULT-009** `vaultService.ts` - getVaults()
+- [x] **VAULT-010** `vaultService.ts` - createVault()
+- [x] **VAULT-011** `vaultService.ts` - updateVault()
+- [x] **VAULT-012** `vaultService.ts` - deleteVault()
+- [x] **VAULT-013** `vaultService.ts` - moveItem()
 
 ### Item Management
-- [ ] **ITEM-001** `ItemDetailScreen.tsx` - Hero image
-- [ ] **ITEM-002** `ItemDetailScreen.tsx` - Prijsgrafiek
-- [ ] **ITEM-003** `ItemDetailScreen.tsx` - Technische specificaties
-- [ ] **ITEM-004** `ItemDetailScreen.tsx` - Conditie rapport
-- [ ] **ITEM-005** `ItemDetailScreen.tsx` - Manual Override input
-- [ ] **ITEM-006** `ItemDetailScreen.tsx` - Vault selector
-- [ ] **ITEM-007** `ItemDetailScreen.tsx` - Delete button
-- [ ] **ITEM-008** `PriceChart.tsx` - Historische prijsdata
-- [ ] **ITEM-009** `PriceChart.tsx` - 7d/1m/1y toggles
-- [ ] **ITEM-010** `PriceChart.tsx` - "User Defined" markers
-- [ ] **ITEM-011** `ConditionBadge.tsx` - Grade weergave
-- [ ] **ITEM-012** `ConditionBadge.tsx` - Kleurcodering
-- [ ] **ITEM-013** `ConditionBadge.tsx` - Confidence indicator
+- [x] **ITEM-001** `ItemDetailScreen.tsx` - Hero image
+- [x] **ITEM-002** `ItemDetailScreen.tsx` - Prijsgrafiek
+- [x] **ITEM-003** `ItemDetailScreen.tsx` - Technische specificaties
+- [x] **ITEM-004** `ItemDetailScreen.tsx` - Conditie rapport
+- [x] **ITEM-005** `ItemDetailScreen.tsx` - Manual Override input
+- [x] **ITEM-006** `ItemDetailScreen.tsx` - Vault selector
+- [x] **ITEM-007** `ItemDetailScreen.tsx` - Delete button
+- [x] **ITEM-008** `PriceChart.tsx` - Historische prijsdata
+- [x] **ITEM-009** `PriceChart.tsx` - 7d/1m/1y toggles
+- [x] **ITEM-010** `PriceChart.tsx` - "User Defined" markers
+- [x] **ITEM-011** `ConditionBadge.tsx` - Grade weergave
+- [x] **ITEM-012** `ConditionBadge.tsx` - Kleurcodering
+- [x] **ITEM-013** `ConditionBadge.tsx` - Confidence indicator
 
 ### Item Service
-- [ ] **ITEM-014** `itemService.ts` - getItems()
-- [ ] **ITEM-015** `itemService.ts` - getItem()
-- [ ] **ITEM-016** `itemService.ts` - updateItem()
-- [ ] **ITEM-017** `itemService.ts` - deleteItem()
-- [ ] **ITEM-018** `itemService.ts` - setManualValue()
-- [ ] **ITEM-019** `itemService.ts` - ignoreMarketSuggestions()
+- [x] **ITEM-014** `itemService.ts` - getItems()
+- [x] **ITEM-015** `itemService.ts` - getItem()
+- [x] **ITEM-016** `itemService.ts` - updateItem()
+- [x] **ITEM-017** `itemService.ts` - deleteItem()
+- [x] **ITEM-018** `itemService.ts` - setManualValue()
+- [x] **ITEM-019** `itemService.ts` - ignoreMarketSuggestions()
 
 ### Manual Override
-- [ ] **MO-001** `PriceSuggestionModal.tsx` - Toast bij nieuwe marktprijs
-- [ ] **MO-002** `PriceSuggestionModal.tsx` - "Update" button
-- [ ] **MO-003** `PriceSuggestionModal.tsx` - "Negeren" button
-- [ ] **MO-004** `last_modified_at` check voor concurrency
+- [x] **MO-001** `PriceSuggestionModal.tsx` - Toast bij nieuwe marktprijs
+- [x] **MO-002** `PriceSuggestionModal.tsx` - "Update" button
+- [x] **MO-003** `PriceSuggestionModal.tsx` - "Negeren" button
+- [x] **MO-004** `last_modified_at` check voor concurrency
 
 ---
 
@@ -345,19 +345,27 @@
 
 ---
 
-## 📈 Statistieken
+## � Backlog & Future Improvements
+
+### Testing Infrastructure
+- [ ] **TEST-EXT-001** Database Integration Tests (Real DB with seed/teardown)
+- [ ] **TEST-EXT-002** E2E Testing with Detox or Maestro
+
+---
+
+## �📈 Statistieken
 
 | Sprint | Taken | Status |
 |--------|-------|--------|
 | Sprint 0 | 27 | [x] 100% |
 | Sprint 1 | 33 | [x] 100% |
 | Sprint 2 | 47 | [x] 100% |
-| Sprint 3 | 33 | [ ] 0% |
+| Sprint 3 | 33 | [x] 100% |
 | Sprint 4 | 19 | [ ] 0% |
 | Sprint 5 | 13 | [ ] 0% |
 | Sprint 6 | 22 | [/] 41% |
 | Sprint 7 | 35 | [/] 3% |
-| **Totaal** | **229 taken** | **~52% voltooid** |
+| **Totaal** | **229 taken** | **~67% voltooid** |
 
 ---
 

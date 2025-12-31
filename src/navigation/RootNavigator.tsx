@@ -9,6 +9,7 @@ import { theme } from '../constants/theme';
 import DashboardScreen from '../screens/DashboardScreen';
 import ScannerScreen from '../screens/ScannerScreen';
 import VaultsScreen from '../screens/VaultsScreen';
+import VaultDetailScreen from '../screens/VaultDetailScreen';
 import ItemDetailScreen from '../screens/ItemDetailScreen';
 import MarketScreen from '../screens/MarketScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -62,6 +63,7 @@ export const RootNavigator = () => {
                         <Stack.Screen name="Dashboard" component={DashboardScreen} />
                         <Stack.Screen name="Scanner" component={ScannerScreen} />
                         <Stack.Screen name="Vaults" component={VaultsScreen} />
+                        <Stack.Screen name="VaultDetail" component={VaultDetailScreen} />
                         <Stack.Screen name="ItemDetail" component={ItemDetailScreen} />
                         <Stack.Screen name="Market" component={MarketScreen} />
                         <Stack.Screen name="Profile" component={ProfileScreen} />

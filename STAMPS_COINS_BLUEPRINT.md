@@ -481,12 +481,31 @@ RSS scraping + AI samenvatting (elke 6 uur).
 - [ ] Paywall Blocking
 - [ ] Onboarding regression
 
+### E. Test Data Fixtures
+Centralized mock data located in `src/__tests__/fixtures/`:
+
+```typescript
+// Usage in any test file
+import { mockStampMint, mockProUser, mockVaultStamps } from '../fixtures';
+
+(itemService.getItem as jest.Mock).mockResolvedValue(mockStampMint);
+```
+
+| File | Contents |
+|------|----------|
+| `users.ts` | `mockFreeUser`, `mockProUser`, `mockNewUser`, `mockSession` |
+| `vaults.ts` | `mockVaultStamps`, `mockVaultCoins`, `mockUserVaults` |
+| `items.ts` | `mockStampMint`, `mockCoinGold`, `mockStampCollection` |
+| `index.ts` | Barrel export for all fixtures |
+
 ### Definition of Done (DoD)
-- [ ] Unit tests geschreven en geslaagd
-- [ ] Edge cases afgehandeld
-- [ ] Sentry logging geïmplementeerd
-- [ ] Privacy-check: EXIF verwijderd
-- [ ] Documentatie bijgewerkt
+- [ ] **Unit Tests**: Backend services en kritieke flows hebben 100% coverage.
+- [ ] **Component Tests**: Nieuwe UI-componenten zijn gedekt met RNTL tests.
+- [ ] **Automated Verification**: `npm test` slaagt zonder failures (0 errors).
+- [ ] **Error Handling**: Edge cases zijn afgevangen en Sentry logging is toegevoegd.
+- [ ] **Privacy Check**: Bevestigd dat geen gevoelige data (EXIF/GPS) wordt opgeslagen.
+- [ ] **Documentation**: `DEVELOPMENT_TASKS.md`, `task.md` en `walkthrough.md` zijn bijgewerkt.
+- [ ] **Source Control**: Wijzigingen zijn gecommit en gepushed naar de remote repository.
 
 ---
 
