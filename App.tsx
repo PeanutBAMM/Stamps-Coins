@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as Sentry from '@sentry/react-native';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { subscriptionService } from './src/services/subscriptionService';
+import { AuthProvider } from './src/hooks/useAuth';
 
 Sentry.init({
   dsn: 'https://1e49252d46837eec4a749039fba24a55@o4510631175782400.ingest.de.sentry.io/4510631177814096',
@@ -20,10 +21,10 @@ function App() {
   }, []);
 
   return (
-    <>
+    <AuthProvider>
       <StatusBar style="light" />
       <RootNavigator />
-    </>
+    </AuthProvider>
   );
 }
 

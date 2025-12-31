@@ -42,6 +42,6 @@ yarn-error.*
 
 .env.local
 
-# Documentation and task lists
-DEVELOPMENT_TASKS.md
-STAMPS_COINS_BLUEPRINT.md
+# Documentation and task lists (Removing from ignore to allow editing)
+# DEVELOPMENT_TASKS.md
+# STAMPS_COINS_BLUEPRINT.md
