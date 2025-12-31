@@ -1,177 +1,121 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
-import { theme } from '../constants/theme';
+import React, { useCallback, useState } from 'react';
+import { View, StyleSheet, ScrollView, RefreshControl, StatusBar, SafeAreaView, TouchableOpacity, Text } from 'react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../hooks/useAuth';
-import { profileService } from '../services/profileService';
+import { portfolioService } from '../services/portfolioService';
+import { PortfolioSummary, AssetPerformance } from '../types/portfolio.types';
+import { PortfolioValue } from '../components/dashboard/PortfolioValue';
+import { TopMoversWidget } from '../components/dashboard/TopMoversWidget';
+import { NewsCarousel } from '../components/dashboard/NewsCarousel';
+import { useRealtimePrices } from '../hooks/useRealtimePrices';
 
-export default function DashboardScreen({ navigation }: any) {
-    const { user, isGhost } = useAuth();
-    const [profile, setProfile] = useState<any>(null);
-    const [loading, setLoading] = useState(false);
+const DashboardScreen = () => {
+    const navigation = useNavigation<any>();
+    const { session } = useAuth();
+    const [refreshing, setRefreshing] = useState(false);
+    const [summary, setSummary] = useState<PortfolioSummary>({
+        total_value: 0,
+        change_24h_value: 0,
+        change_24h_percentage: 0
+    });
+    const [topMovers, setTopMovers] = useState<AssetPerformance[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        if (user) {
-            loadDashboardData();
-        }
-    }, [user]);
-
-    const loadDashboardData = async () => {
-        if (!user) return;
-        setLoading(true);
+    const fetchData = useCallback(async () => {
+        if (!session?.user?.id) return;
         try {
-            const data = await profileService.getProfile(user.id);
-            setProfile(data);
+            const [stats, movers] = await Promise.all([
+                portfolioService.get24hChange(session.user.id),
+                portfolioService.getTopMovers(session.user.id)
+            ]);
+            setSummary(stats);
+            setTopMovers(movers);
         } catch (error) {
-            console.error('Error loading dashboard:', error);
+            console.error('Failed to fetch dashboard data:', error);
         } finally {
-            setLoading(false);
+            setIsLoading(false);
+            setRefreshing(false);
         }
+    }, [session?.user?.id]);
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchData();
+        }, [fetchData])
+    );
+
+    // Subscribe to realtime updates
+    useRealtimePrices(session?.user?.id, fetchData);
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        fetchData();
+    }, []);
+
+    const handleFabPress = () => {
+        navigation.navigate('Scanner'); // Assuming 'Scanner' is the route name
     };
 
-    const displayName = profile?.username || (isGhost ? 'Verzamelaar' : user?.email?.split('@')[0]);
-
     return (
-        <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-            <View style={styles.header}>
-                <Text style={styles.welcome}>Hallo,</Text>
-                <Text style={styles.name}>{displayName}</Text>
-            </View>
-
-            <View style={styles.summaryCard}>
-                <Text style={styles.summaryLabel}>Totale Waarde</Text>
-                <Text style={styles.summaryValue}>€ 0,00</Text>
-                <Text style={styles.summaryChange}>+ € 0,00 (vandaag)</Text>
-            </View>
-
-            <View style={styles.actionGrid}>
-                <TouchableOpacity
-                    style={styles.actionButton}
-                    onPress={() => navigation.navigate('Scanner')}
-                >
-                    <Text style={styles.actionIcon}>📸</Text>
-                    <Text style={styles.actionText}>Scan Item</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.actionButton}
-                    onPress={() => navigation.navigate('Vaults')}
-                >
-                    <Text style={styles.actionIcon}>🔐</Text>
-                    <Text style={styles.actionText}>Mijn Kluis</Text>
-                </TouchableOpacity>
-            </View>
-
-            <View style={styles.recentSection}>
-                <Text style={styles.sectionTitle}>Recent Toegevoegd</Text>
-                <View style={styles.emptyState}>
-                    <Text style={styles.emptyText}>Je hebt nog geen items gescand.</Text>
-                </View>
-            </View>
-
-            <TouchableOpacity
-                style={styles.profileButton}
-                onPress={() => navigation.navigate('Profile')}
+        <SafeAreaView style={styles.container}>
+            <StatusBar barStyle="dark-content" backgroundColor="#f2f2f7" />
+            <ScrollView
+                contentContainerStyle={styles.scrollContent}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
             >
-                <Text style={styles.profileButtonText}>Profiel beheren</Text>
+                <PortfolioValue
+                    totalValue={summary.total_value}
+                    changeValue={summary.change_24h_value}
+                    changePercentage={summary.change_24h_percentage}
+                    isLoading={isLoading && !refreshing && summary.total_value === 0}
+                />
+
+                <TopMoversWidget
+                    movers={topMovers}
+                    isLoading={isLoading}
+                    onItemPress={(id) => navigation.navigate('ItemDetail', { id })}
+                />
+
+                <NewsCarousel />
+
+                {/* Simple Spacer for FAB */}
+                <View style={{ height: 80 }} />
+            </ScrollView>
+
+            <TouchableOpacity style={styles.fab} onPress={handleFabPress}>
+                <Ionicons name="camera" size={28} color="#fff" />
             </TouchableOpacity>
-        </ScrollView>
+        </SafeAreaView>
     );
-}
+};
+
+export default DashboardScreen;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: theme.colors.background,
+        backgroundColor: '#F2F2F7', // iOS system gray 6
     },
-    content: {
-        padding: theme.spacing.lg,
+    scrollContent: {
+        paddingBottom: 20,
     },
-    header: {
-        marginTop: theme.spacing.xl,
-        marginBottom: theme.spacing.xl,
-    },
-    welcome: {
-        fontSize: 16,
-        color: theme.colors.textSecondary,
-    },
-    name: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        color: theme.colors.text,
-    },
-    summaryCard: {
-        backgroundColor: theme.colors.primary,
-        padding: theme.spacing.xl,
-        borderRadius: 20,
-        marginBottom: theme.spacing.xl,
-    },
-    summaryLabel: {
-        color: 'rgba(255, 255, 255, 0.8)',
-        fontSize: 14,
-        marginBottom: 4,
-    },
-    summaryValue: {
-        color: '#fff',
-        fontSize: 36,
-        fontWeight: 'bold',
-        marginBottom: 4,
-    },
-    summaryChange: {
-        color: 'rgba(255, 255, 255, 0.9)',
-        fontSize: 14,
-    },
-    actionGrid: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: theme.spacing.xl,
-    },
-    actionButton: {
-        backgroundColor: theme.colors.surface,
-        width: '48%',
-        padding: theme.spacing.lg,
-        borderRadius: 16,
+    fab: {
+        position: 'absolute',
+        bottom: 24,
+        right: 24,
+        width: 56,
+        height: 56,
+        borderRadius: 28,
+        backgroundColor: '#007AFF', // iOS blue
+        justifyContent: 'center',
         alignItems: 'center',
-        borderWidth: 1,
-        borderColor: theme.colors.border,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 5,
     },
-    actionIcon: {
-        fontSize: 32,
-        marginBottom: theme.spacing.sm,
-    },
-    actionText: {
-        color: theme.colors.text,
-        fontWeight: 'bold',
-        fontSize: 16,
-    },
-    recentSection: {
-        flex: 1,
-    },
-    sectionTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: theme.colors.text,
-        marginBottom: theme.spacing.md,
-    },
-    emptyState: {
-        padding: theme.spacing.xl,
-        alignItems: 'center',
-        backgroundColor: theme.colors.surface,
-        borderRadius: 16,
-        borderStyle: 'dashed',
-        borderWidth: 1,
-        borderColor: theme.colors.border,
-    },
-    emptyText: {
-        color: theme.colors.textSecondary,
-        textAlign: 'center',
-    },
-    profileButton: {
-        marginTop: theme.spacing.xl,
-        padding: theme.spacing.md,
-        alignItems: 'center',
-    },
-    profileButtonText: {
-        color: theme.colors.primary,
-        fontWeight: '600',
-    }
 });

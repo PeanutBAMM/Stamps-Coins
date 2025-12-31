@@ -195,30 +195,30 @@
 ## 📊 Sprint 4: Dashboard & Portfolio Tracking (Week 8-9)
 
 ### Dashboard Components
-- [ ] **DASH-001** `DashboardScreen.tsx` - Layout setup
-- [ ] **DASH-002** `DashboardScreen.tsx` - FAB camera button
-- [ ] **DASH-003** `DashboardScreen.tsx` - Nieuws carrousel
-- [ ] **DASH-004** `PortfolioValue.tsx` - Geanimeerde waarde
-- [ ] **DASH-005** `PortfolioValue.tsx` - Valuta formatting
-- [ ] **DASH-006** `PortfolioValue.tsx` - Loading skeleton
-- [ ] **DASH-007** `ChangeIndicator.tsx` - Percentage stijging/daling
-- [ ] **DASH-008** `ChangeIndicator.tsx` - Groene/rode kleur
-- [ ] **DASH-009** `ChangeIndicator.tsx` - Pijl icoon
-- [ ] **DASH-010** `TopMoversWidget.tsx` - Top 3 stijgende items
-- [ ] **DASH-011** `TopMoversWidget.tsx` - Horizontale scroll
-- [ ] **DASH-012** `TopMoversWidget.tsx` - Item thumbnails
+- [x] **DASH-001** `DashboardScreen.tsx` - Layout setup
+- [x] **DASH-002** `DashboardScreen.tsx` - FAB camera button
+- [x] **DASH-003** `DashboardScreen.tsx` - Nieuws carrousel
+- [x] **DASH-004** `PortfolioValue.tsx` - Geanimeerde waarde
+- [x] **DASH-005** `PortfolioValue.tsx` - Valuta formatting
+- [x] **DASH-006** `PortfolioValue.tsx` - Loading skeleton
+- [x] **DASH-007** `ChangeIndicator.tsx` - Percentage stijging/daling
+- [x] **DASH-008** `ChangeIndicator.tsx` - Groene/rode kleur
+- [x] **DASH-009** `ChangeIndicator.tsx` - Pijl icoon
+- [x] **DASH-010** `TopMoversWidget.tsx` - Top 3 stijgende items
+- [x] **DASH-011** `TopMoversWidget.tsx` - Horizontale scroll
+- [x] **DASH-012** `TopMoversWidget.tsx` - Item thumbnails
 
 ### Realtime Updates
-- [ ] **RT-001** `useRealtimePrices.ts` - Supabase subscription setup
-- [ ] **RT-002** `useRealtimePrices.ts` - market_prices listener
-- [ ] **RT-003** `useRealtimePrices.ts` - UI refresh trigger
-- [ ] **RT-004** `useRealtimePrices.ts` - Lokale portfolio update
+- [x] **RT-001** `useRealtimePrices.ts` - Supabase subscription setup
+- [x] **RT-002** `useRealtimePrices.ts` - market_prices listener
+- [x] **RT-003** `useRealtimePrices.ts` - UI refresh trigger
+- [x] **RT-004** `useRealtimePrices.ts` - Lokale portfolio update
 
 ### Portfolio Service
-- [ ] **PORT-001** `portfolioService.ts` - getTotalValue()
-- [ ] **PORT-002** `portfolioService.ts` - get24hChange()
-- [ ] **PORT-003** `portfolioService.ts` - getHistory()
-- [ ] **PORT-004** `portfolioService.ts` - recordDailySnapshot()
+- [x] **PORT-001** `portfolioService.ts` - getTotalValue()
+- [x] **PORT-002** `portfolioService.ts` - get24hChange()
+- [x] **PORT-003** `portfolioService.ts` - getHistory()
+- [x] **PORT-004** `portfolioService.ts` - recordDailySnapshot()
 
 ### Edge Function
 - [ ] **PORT-005** `daily-snapshot/index.ts` - Cronjob configuratie
@@ -361,7 +361,7 @@
 | Sprint 1 | 33 | [x] 100% |
 | Sprint 2 | 47 | [x] 100% |
 | Sprint 3 | 33 | [x] 100% |
-| Sprint 4 | 19 | [ ] 0% |
+| Sprint 4 | 19 | [x] 100% |
 | Sprint 5 | 13 | [ ] 0% |
 | Sprint 6 | 22 | [/] 41% |
 | Sprint 7 | 35 | [/] 3% |
