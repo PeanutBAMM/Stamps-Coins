@@ -62,3 +62,18 @@ jest.mock('expo-image', () => ({
 jest.mock('expo-linear-gradient', () => ({
     LinearGradient: 'View',
 }));
+
+// Mock react-native-purchases (RevenueCat)
+jest.mock('react-native-purchases', () => ({
+    default: {
+        setLogLevel: jest.fn(),
+        configure: jest.fn(),
+        logIn: jest.fn().mockResolvedValue({ customerInfo: {} }),
+        getOfferings: jest.fn().mockResolvedValue({ current: null }),
+        getCustomerInfo: jest.fn().mockResolvedValue({ entitlements: { active: {} } }),
+        purchasePackage: jest.fn().mockResolvedValue({ customerInfo: { entitlements: { active: {} } } }),
+        restorePurchases: jest.fn().mockResolvedValue({ entitlements: { active: {} } }),
+    },
+    LOG_LEVEL: { DEBUG: 'DEBUG' },
+    PACKAGE_TYPE: {},
+}));

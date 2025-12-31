@@ -244,7 +244,7 @@
 - [x] **NEWS-010** `generate-news-feed/index.ts` - RSS scraping
 - [x] **NEWS-011** `generate-news-feed/index.ts` - Gemini filtering/samenvatting
 - [x] **NEWS-012** `generate-news-feed/index.ts` - Opslaan in database
-- [ ] **NEWS-013** Cronjob configuratie (elke 6 uur)
+- [x] **NEWS-013** Cronjob configuratie (elke 6 uur)
 
 ---
 
@@ -255,8 +255,8 @@
 - [x] **PAY-002** `PaywallScreen.tsx` - Prijs weergave (€7,99/maand)
 - [x] **PAY-003** `PaywallScreen.tsx` - Purchase button
 - [x] **PAY-004** `PaywallScreen.tsx` - Restore purchases link
-- [ ] **PAY-005** `PaywallScreen.tsx` - Terms & Privacy links
-- [ ] **PAY-006** `FeatureComparison.tsx` - Checklist Free vs Pro
+- [x] **PAY-005** `PaywallScreen.tsx` - Terms & Privacy links
+- [x] **PAY-006** `FeatureComparison.tsx` - Checklist Free vs Pro
 
 ### RevenueCat Integration
 - [x] **RC-001** `subscriptionService.ts` - initialize()
@@ -266,23 +266,23 @@
 - [x] **RC-005** `subscriptionService.ts` - checkProStatus()
 
 ### Webhook
-- [ ] **RC-006** `handle-revenuecat-webhook/index.ts` - Signature validatie
-- [ ] **RC-007** `handle-revenuecat-webhook/index.ts` - Event parsing
-- [ ] **RC-008** `handle-revenuecat-webhook/index.ts` - pro_status update
-- [ ] **RC-009** `handle-revenuecat-webhook/index.ts` - Event logging
+- [x] **RC-006** `handle-revenuecat-webhook/index.ts` - Signature validatie
+- [x] **RC-007** `handle-revenuecat-webhook/index.ts` - Event parsing
+- [x] **RC-008** `handle-revenuecat-webhook/index.ts` - pro_status update
+- [x] **RC-009** `handle-revenuecat-webhook/index.ts` - Event logging
 
 ### Pro Feature Gating
-- [ ] **PRO-001** `useProStatus.ts` hook
-- [ ] **PRO-002** `ScannerScreen.tsx` - Item count check
-- [ ] **PRO-003** `ScannerScreen.tsx` - Paywall trigger bij > 35 items
-- [ ] **PRO-004** `ProBadge.tsx` component
+- [x] **PRO-001** `useProStatus.ts` hook
+- [x] **PRO-002** `ScannerScreen.tsx` - Item count check
+- [x] **PRO-003** `ScannerScreen.tsx` - Paywall trigger bij > 35 items
+- [x] **PRO-004** `ProBadge.tsx` component
 
 ### Export Functionaliteit
-- [ ] **EXP-001** `ExportScreen.tsx` - CSV export button
-- [ ] **EXP-002** `ExportScreen.tsx` - PDF export button (Pro only)
-- [ ] **EXP-003** `ExportScreen.tsx` - Export history
-- [ ] **EXP-004** `generate-export/index.ts` - CSV generatie
-- [ ] **EXP-005** `generate-export/index.ts` - PDF generatie
+- [x] **EXP-001** `ExportScreen.tsx` - CSV export button
+- [x] **EXP-002** `ExportScreen.tsx` - PDF export button (Pro only)
+- [x] **EXP-003** `ExportScreen.tsx` - Export history
+- [x] **EXP-004** `generate-export/index.ts` - CSV generatie
+- [x] **EXP-005** `generate-export/index.ts` - PDF generatie
 
 ---
 
@@ -345,7 +345,7 @@
 
 ---
 
-## � Backlog & Future Improvements
+##  Backlog & Future Improvements
 
 ### Testing Infrastructure
 - [ ] **TEST-EXT-001** Database Integration Tests (Real DB with seed/teardown)
@@ -353,7 +353,7 @@
 
 ---
 
-## �📈 Statistieken
+## 📈 Statistieken
 
 | Sprint | Taken | Status |
 |--------|-------|--------|
@@ -362,8 +362,8 @@
 | Sprint 2 | 47 | [x] 100% |
 | Sprint 3 | 33 | [x] 100% |
 | Sprint 4 | 19 | [x] 100% |
-| Sprint 5 | 13 | [/] 92% |
-| Sprint 6 | 22 | [/] 41% |
+| Sprint 5 | 13 | [x] 100% |
+| Sprint 6 | 22 | [x] 100% |
 | Sprint 7 | 35 | [/] 3% |
 | **Totaal** | **229 taken** | **~67% voltooid** |
 

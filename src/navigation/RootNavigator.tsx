@@ -17,6 +17,7 @@ import LoginScreen from '../screens/auth/LoginScreen';
 import OnboardingScreen from '../screens/onboarding/OnboardingScreen';
 import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 import PaywallScreen from '../screens/PaywallScreen';
+import ExportScreen from '../screens/ExportScreen';
 
 export type RootStackParamList = {
     Onboarding: undefined;
@@ -29,6 +30,7 @@ export type RootStackParamList = {
     ItemDetail: { itemId: string };
     Market: undefined;
     Profile: undefined;
+    Export: undefined;
     Paywall: undefined;
 };
 
@@ -67,6 +69,7 @@ export const RootNavigator = () => {
                         <Stack.Screen name="ItemDetail" component={ItemDetailScreen} />
                         <Stack.Screen name="Market" component={MarketScreen} />
                         <Stack.Screen name="Profile" component={ProfileScreen} />
+                        <Stack.Screen name="Export" component={ExportScreen} />
                         <Stack.Screen name="Paywall" component={PaywallScreen} />
                     </>
                 )}

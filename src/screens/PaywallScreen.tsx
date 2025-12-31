@@ -13,6 +13,7 @@ import { subscriptionService } from '../services/subscriptionService';
 import { theme } from '../constants/theme';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/RootNavigator';
+import { FeatureComparison } from '../components/paywall/FeatureComparison';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Paywall'>;
 
@@ -92,28 +93,16 @@ export default function PaywallScreen({ navigation }: Props) {
                     <Text style={styles.subtitle}>Haal het maximale uit je collectie met onbeperkte scans en real-time waarde tracking.</Text>
                 </View>
 
-                <View style={styles.features}>
-                    <View style={styles.featureItem}>
-                        <Text style={styles.featureIcon}>✨</Text>
-                        <View>
-                            <Text style={styles.featureTitle}>Onbeperkte Scans</Text>
-                            <Text style={styles.featureDesc}>Geen limiet van 35 items meer.</Text>
-                        </View>
-                    </View>
-                    <View style={styles.featureItem}>
-                        <Text style={styles.featureIcon}>📈</Text>
-                        <View>
-                            <Text style={styles.featureTitle}>Gedetailleerde Grafieken</Text>
-                            <Text style={styles.featureDesc}>Zie hoe de waarde van je kluis groeit.</Text>
-                        </View>
-                    </View>
-                    <View style={styles.featureItem}>
-                        <Text style={styles.featureIcon}>🌍</Text>
-                        <View>
-                            <Text style={styles.featureTitle}>Globale Marktdata</Text>
-                            <Text style={styles.featureDesc}>Prijzen uit Europa, NA en Azië.</Text>
-                        </View>
-                    </View>
+                <FeatureComparison />
+
+                <View style={styles.legalContainer}>
+                    <TouchableOpacity onPress={() => Alert.alert('Terms', 'Placeholder URL')}>
+                        <Text style={styles.legalText}>Terms of Service</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.legalSeparator}>•</Text>
+                    <TouchableOpacity onPress={() => Alert.alert('Privacy', 'Placeholder URL')}>
+                        <Text style={styles.legalText}>Privacy Policy</Text>
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.packages}>
@@ -180,25 +169,19 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         lineHeight: 22,
     },
-    features: {
+    legalContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: theme.spacing.lg,
         marginBottom: theme.spacing.xl,
     },
-    featureItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: theme.spacing.lg,
+    legalText: {
+        fontSize: 12,
+        color: theme.colors.textSecondary,
+        textDecorationLine: 'underline',
     },
-    featureIcon: {
-        fontSize: 24,
-        marginRight: theme.spacing.md,
-    },
-    featureTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: theme.colors.text,
-    },
-    featureDesc: {
-        fontSize: 14,
+    legalSeparator: {
+        marginHorizontal: theme.spacing.sm,
         color: theme.colors.textSecondary,
     },
     packages: {

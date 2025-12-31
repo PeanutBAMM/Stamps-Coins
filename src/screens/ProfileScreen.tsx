@@ -210,14 +210,10 @@ export default function ProfileScreen({ navigation }: any) {
 
                     <View style={styles.section}>
                         <Text style={styles.label}>Data & Export</Text>
-                        <View style={styles.exportRow}>
-                            <TouchableOpacity style={styles.exportBtn}>
-                                <Text style={styles.exportBtnText}>CSV Export</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.exportBtn}>
-                                <Text style={styles.exportBtnText}>PDF Rapport</Text>
-                            </TouchableOpacity>
-                        </View>
+                        <TouchableOpacity style={styles.exportBtn} onPress={() => navigation.navigate('Export')}>
+                            <Text style={styles.exportBtnText}>Open Export Menu</Text>
+                        </TouchableOpacity>
+
                     </View>
 
                     {!isGhost && (
@@ -231,8 +227,9 @@ export default function ProfileScreen({ navigation }: any) {
                         <Text style={styles.signOutText}>Uitloggen</Text>
                     </TouchableOpacity>
                 </>
-            )}
-        </ScrollView>
+            )
+            }
+        </ScrollView >
     );
 }
 
