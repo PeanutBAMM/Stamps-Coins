@@ -34,6 +34,7 @@ const CONFIG = {
     project: 'react-native',
     token: process.env.SENTRY_AUTH_TOKEN,
     baseUrl: 'https://sentry.io/api/0',
+    env: process.argv.includes('--test') ? 'test' : process.argv.includes('--prod') ? 'production' : undefined,
 };
 
 async function getRecentIssues() {
@@ -42,7 +43,8 @@ async function getRecentIssues() {
         return;
     }
 
-    console.log(`🔍 Fetching recent issues for project: ${CONFIG.project}...`);
+    const envLabel = CONFIG.env ? `[${CONFIG.env.toUpperCase()}] ` : '';
+    console.log(`🔍 Fetching ${envLabel}issues for project: ${CONFIG.project}...`);
 
     try {
         const response = await axios.get(
@@ -53,7 +55,8 @@ async function getRecentIssues() {
                 },
                 params: {
                     statsPeriod: '24h',
-                    limit: 50
+                    limit: 50,
+                    query: CONFIG.env ? `environment:${CONFIG.env}` : 'is:unresolved',
                 },
             }
         );
@@ -61,7 +64,7 @@ async function getRecentIssues() {
         const issues = response.data;
 
         if (issues.length === 0) {
-            console.log('✅ No unresolved issues found in the last 24 hours.');
+            console.log(`✅ No unresolved ${CONFIG.env || ''} issues found in the last 24 hours.`);
             return;
         }
 
@@ -69,12 +72,14 @@ async function getRecentIssues() {
         issues.slice(0, 8).forEach((issue: any) => {
             const level = issue.level.toUpperCase();
             const time = new Date(issue.lastSeen).toLocaleTimeString();
+            const aiContext = issue.tags?.find((t: any) => t.key === 'ai.context')?.value || 'N/A';
+
             console.log(`[${level}] ${issue.title} (${time})`);
+            console.log(`  AI Context: ${aiContext}`);
             if (issue.culprit) console.log(`  Location: ${issue.culprit}`);
             if (issue.metadata && issue.metadata.value) {
                 console.log(`  Detail: ${issue.metadata.value}`);
             }
-            console.log(`  Count: ${issue.count} | Users: ${issue.userCount}`);
             console.log(`  URL: ${issue.permalink}`);
             console.log('');
         });

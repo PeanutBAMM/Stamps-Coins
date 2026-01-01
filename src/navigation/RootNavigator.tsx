@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ActivityIndicator, View } from 'react-native';
 import { useAuth } from '../hooks/useAuth';
 import { theme } from '../constants/theme';
+import * as Sentry from '@sentry/react-native';
 
 // Screens
 import DashboardScreen from '../screens/DashboardScreen';
@@ -36,7 +37,8 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export const RootNavigator = () => {
+export const RootNavigator = ({ routingInstrumentation }: { routingInstrumentation?: any }) => {
+    const navigationRef = React.useRef(null);
     const { session, loading } = useAuth();
 
     if (loading) {
@@ -48,7 +50,14 @@ export const RootNavigator = () => {
     }
 
     return (
-        <NavigationContainer>
+        <NavigationContainer
+            ref={navigationRef}
+            onReady={() => {
+                if (routingInstrumentation) {
+                    routingInstrumentation.registerNavigationContainer(navigationRef);
+                }
+            }}
+        >
             <Stack.Navigator
                 screenOptions={{
                     headerShown: false,

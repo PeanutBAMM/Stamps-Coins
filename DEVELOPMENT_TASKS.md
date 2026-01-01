@@ -286,7 +286,7 @@
 
 ---
 
-## ✨ Sprint 7: Polish, Testing & Launch Prep (Week 13-14)
+## ✨ Sprint 7: Modernized Sentry & Full-Scope Logging (Week 13)
 
 ### Unit Tests
 - [x] **TEST-001** `itemService.test.ts`
@@ -309,7 +309,7 @@
 - [x] **TEST-014** `.maestro/happy-path.yaml` - Onboarding flow (swipe navigation)
 - [x] **TEST-015** Maestro E2E test execution - All assertions passing
 
-### Sentry Integration
+### Legacy Sentry Setup
 - [x] **SENT-001** Sentry Initialization in App.tsx
 - [x] **SENT-002** `errorService.ts` - captureException()
 - [x] **SENT-003** `errorService.ts` - setUser()
@@ -319,6 +319,14 @@
 - [x] **SENT-007** Global console.error/warn interceptor in App.tsx
 - [x] **SENT-008** `scripts/sentry-feedback.ts` - CLI issue fetcher
 - [x] **SENT-009** navigator.userAgent polyfill for Expo Go compatibility
+
+### Modernized Full-Scope Logging (Dec 2025 Standards)
+- [x] **SENT-010** Upgrade Sentry SDK to v8+ (Profiling, New Arch support)
+- [x] **SENT-011** Integrate Sentry Node for global Jest error reporting
+- [x] **SENT-012** Implement React Navigation v7 tracing in Sentry
+- [x] **SENT-013** Add AI-optimized tags (ai.context, error.scope) to all events
+- [x] **SENT-014** Enhanced Expo Go fallback with JS-only Sentry mode
+- [x] **SENT-015** Update `sentry-feedback.ts` with AI troubleshooting support
 
 ### RevenueCat Expo Go Compatibility
 - [x] **RC-001** `subscriptionService.ts` - Expo Go detection using expo-constants
@@ -330,6 +338,10 @@
 - [x] **PERF-002** Virtualized lists voor grote collecties (FlatList optimized)
 - [x] **PERF-003** Offline queue voor scans (`offlineQueueService.ts`)
 - [x] **PERF-004** Supabase query optimization (`queryOptimizer.ts`)
+
+---
+
+## 🚀 Sprint 8: App Store Prep & Final Launch (Week 14)
 
 ### App Store Prep
 - [ ] **STORE-001** App icon (1024x1024)
@@ -375,8 +387,9 @@
 | Sprint 4 | 19 | [x] 100% |
 | Sprint 5 | 13 | [x] 100% |
 | Sprint 6 | 22 | [x] 100% |
-| Sprint 7 | 44 | [/] 80% |
-| **Totaal** | **238 taken** | **~94% voltooid** |
+| Sprint 7 | 50 | [/] 88% |
+| Sprint 8 | 19 | [ ] 0% |
+| **Totaal** | **244 taken** | **~92% voltooid** |
 
 ---
 

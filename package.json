@@ -17,7 +17,7 @@
     "@react-navigation/native": "^7.1.26",
     "@react-navigation/native-stack": "^7.9.0",
     "@react-navigation/stack": "^7.6.13",
-    "@sentry/react-native": "~7.2.0",
+    "@sentry/react-native": "^7.8.0",
     "@shopify/flash-list": "2.0.2",
     "@supabase/supabase-js": "^2.89.0",
     "expo": "~54.0.30",
@@ -52,6 +52,8 @@
   "devDependencies": {
     "@babel/preset-env": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
+    "@sentry/node": "^10.32.1",
+    "@sentry/types": "^10.32.1",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^13.3.3",
     "@types/jest": "29.5.14",

@@ -5,9 +5,14 @@ import App from '../../App';
 // Mocks
 jest.mock('@sentry/react-native', () => ({
     init: jest.fn(),
-    wrap: (Component: any) => Component,
+    reactNavigationIntegration: jest.fn(() => ({
+        registerNavigationContainer: jest.fn()
+    })),
     mobileReplayIntegration: jest.fn(),
     feedbackIntegration: jest.fn(),
+    hermesProfilingIntegration: jest.fn(),
+    wrap: (Component: any) => Component,
+    ErrorBoundary: ({ children }: any) => children,
 }));
 
 jest.mock('../../src/services/subscriptionService', () => ({
