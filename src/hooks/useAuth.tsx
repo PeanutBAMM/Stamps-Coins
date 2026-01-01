@@ -49,11 +49,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const isGhost = user?.is_anonymous ?? false;
 
     return (
-        <AuthContext.Provider value= {{ user, session, loading, isGhost, signOut }
-}>
-    { children }
-    </AuthContext.Provider>
-  );
+        <AuthContext.Provider value={{ user, session, loading, isGhost, signOut }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
 
 export const useAuth = () => {

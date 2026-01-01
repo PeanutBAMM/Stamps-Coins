@@ -1,0 +1,37 @@
+appId: host.exp.exponent
+---
+- launchApp
+- openLink: exp://10.0.2.2:8081
+- extendedWaitUntil:
+    visible: "Uw Cockpit"
+    timeout: 20000
+- assertVisible: "Uw Cockpit"
+- swipe:
+    direction: LEFT
+    duration: 500
+- extendedWaitUntil:
+    visible: "Digitale Kluizen"
+    timeout: 5000
+- swipe:
+    direction: LEFT
+    duration: 500
+- extendedWaitUntil:
+    visible: "Diepe Duik"
+    timeout: 5000
+- swipe:
+    direction: LEFT
+    duration: 500
+- extendedWaitUntil:
+    visible: "Marktinzichten"
+    timeout: 5000
+- swipe:
+    direction: LEFT
+    duration: 500
+- extendedWaitUntil:
+    visible: "Privacy-First"
+    timeout: 5000
+- tapOn: "Starten"
+- extendedWaitUntil:
+    visible: "Inloggen"
+    timeout: 10000
+- assertVisible: "Inloggen"

@@ -34,7 +34,8 @@
           "project": "react-native",
           "organization": "peanut-ventures"
         }
-      ]
+      ],
+      "@sentry/react-native"
     ]
   }
 }

@@ -194,7 +194,7 @@ export default function ProfileScreen({ navigation }: any) {
                                     <TouchableOpacity
                                         key={curr}
                                         style={[styles.toggleBtn, profile?.currency === curr && styles.toggleBtnActive]}
-                                        onPress={() => profileService.updateSettings(user.id, { currency: curr }).then(() => loadProfile())}
+                                        onPress={() => user && profileService.updateSettings(user.id, { currency: curr }).then(() => loadProfile())}
                                     >
                                         <Text style={[styles.toggleText, profile?.currency === curr && styles.toggleTextActive]}>{curr}</Text>
                                     </TouchableOpacity>

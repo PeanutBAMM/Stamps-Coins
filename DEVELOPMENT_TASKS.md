@@ -305,6 +305,9 @@
 - [x] **TEST-010** `happyPath.test.ts` (stub - ready for Detox)
 - [x] **TEST-011** `paywallBlocking.test.ts` (stub - ready for Detox)
 - [x] **TEST-012** `onboardingFlow.test.ts` (stub - ready for Detox)
+- [x] **TEST-013** Maestro CLI installation and setup
+- [x] **TEST-014** `.maestro/happy-path.yaml` - Onboarding flow (swipe navigation)
+- [x] **TEST-015** Maestro E2E test execution - All assertions passing
 
 ### Sentry Integration
 - [x] **SENT-001** Sentry Initialization in App.tsx
@@ -313,6 +316,14 @@
 - [x] **SENT-004** `errorService.ts` - addBreadcrumb()
 - [x] **SENT-005** Breadcrumbs in alle services
 - [x] **SENT-006** Error categorization
+- [x] **SENT-007** Global console.error/warn interceptor in App.tsx
+- [x] **SENT-008** `scripts/sentry-feedback.ts` - CLI issue fetcher
+- [x] **SENT-009** navigator.userAgent polyfill for Expo Go compatibility
+
+### RevenueCat Expo Go Compatibility
+- [x] **RC-001** `subscriptionService.ts` - Expo Go detection using expo-constants
+- [x] **RC-002** Skip all RevenueCat SDK calls in Expo Go environment
+- [x] **RC-003** Eliminate 'sdk_initialized' TypeError in Expo Go
 
 ### Performance
 - [x] **PERF-001** Image lazy loading in Vault grid (expo-image)
@@ -348,8 +359,8 @@
 ##  Backlog & Future Improvements
 
 ### Testing Infrastructure
-- [ ] **TEST-EXT-001** Database Integration Tests (Real DB with seed/teardown)
-- [ ] **TEST-EXT-002** E2E Testing with Detox or Maestro
+- [x] **TEST-EXT-001** Database Integration Tests (Real DB with seed/teardown)
+- [x] **TEST-EXT-002** E2E Testing with Maestro (Implemented & Passing)
 
 ---
 
@@ -364,8 +375,8 @@
 | Sprint 4 | 19 | [x] 100% |
 | Sprint 5 | 13 | [x] 100% |
 | Sprint 6 | 22 | [x] 100% |
-| Sprint 7 | 35 | [/] 66% |
-| **Totaal** | **229 taken** | **~92% voltooid** |
+| Sprint 7 | 44 | [/] 80% |
+| **Totaal** | **238 taken** | **~94% voltooid** |
 
 ---
 
