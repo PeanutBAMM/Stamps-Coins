@@ -327,6 +327,13 @@
 - [x] **SENT-013** Add AI-optimized tags (ai.context, error.scope) to all events
 - [x] **SENT-014** Enhanced Expo Go fallback with JS-only Sentry mode
 - [x] **SENT-015** Update `sentry-feedback.ts` with AI troubleshooting support
+- [x] **SENT-016** Standardize UI error reporting in LoginScreen.tsx
+- [x] **SENT-017** Standardize UI error reporting in ForgotPasswordScreen.tsx
+- [x] **SENT-018** Standardize UI error reporting in ScannerScreen.tsx
+- [x] **SENT-019** Standardize UI error reporting in PaywallScreen.tsx
+- [x] **SENT-020** Audit and standardize Sentry logging in service layer
+- [x] **SENT-021** Enhance errorService metadata & categorization
+- [x] **SENT-022** Verify Sentry improvements with unit tests
 
 ### RevenueCat Expo Go Compatibility
 - [x] **RC-001** `subscriptionService.ts` - Expo Go detection using expo-constants
@@ -387,9 +394,9 @@
 | Sprint 4 | 19 | [x] 100% |
 | Sprint 5 | 13 | [x] 100% |
 | Sprint 6 | 22 | [x] 100% |
-| Sprint 7 | 50 | [/] 88% |
+| Sprint 7 | 44 | [x] 100% |
 | Sprint 8 | 19 | [ ] 0% |
-| **Totaal** | **244 taken** | **~92% voltooid** |
+| **Totaal** | **241 taken** | **~92% voltooid** |
 
 ---
 

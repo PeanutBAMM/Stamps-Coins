@@ -68,13 +68,17 @@ async function getRecentIssues() {
             return;
         }
 
+        console.log(`Current local time: ${new Date().toLocaleTimeString()}`);
         console.log(`\n--- Recent Sentry Issues (${issues.length}) ---`);
-        issues.slice(0, 8).forEach((issue: any) => {
+        issues.slice(0, 15).forEach((issue: any) => {
             const level = issue.level.toUpperCase();
-            const time = new Date(issue.lastSeen).toLocaleTimeString();
+            const lastSeen = new Date(issue.lastSeen);
+            const timeStr = lastSeen.toLocaleTimeString();
+            const dateStr = lastSeen.toLocaleDateString();
             const aiContext = issue.tags?.find((t: any) => t.key === 'ai.context')?.value || 'N/A';
 
-            console.log(`[${level}] ${issue.title} (${time})`);
+            console.log(`[${level}] ${issue.title}`);
+            console.log(`  Last Seen: ${dateStr} ${timeStr}`);
             console.log(`  AI Context: ${aiContext}`);
             if (issue.culprit) console.log(`  Location: ${issue.culprit}`);
             if (issue.metadata && issue.metadata.value) {
@@ -84,8 +88,8 @@ async function getRecentIssues() {
             console.log('');
         });
 
-        if (issues.length > 5) {
-            console.log(`... and ${issues.length - 5} more.`);
+        if (issues.length > 15) {
+            console.log(`... and ${issues.length - 15} more.`);
         }
 
     } catch (error: any) {

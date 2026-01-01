@@ -13,6 +13,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useProStatus } from '../hooks/useProStatus';
 import { imageService } from '../services/imageService';
 import { profileService } from '../services/profileService';
+import { errorService } from '../services/errorService';
 import { RootStackParamList } from '../navigation/RootNavigator';
 
 type ScannerScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Scanner'>;
@@ -84,7 +85,8 @@ export default function ScannerScreen() {
                     throw new Error('Geen resultaat');
                 }
             }
-        } catch (error) {
+        } catch (error: any) {
+            errorService.handleError(error, 'ScannerScreen.handleCapture');
             console.error('Capture error:', error);
             setStatus('error');
             setStatusMessage('Fout bij maken foto');

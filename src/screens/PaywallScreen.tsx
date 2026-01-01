@@ -10,6 +10,7 @@ import {
     Alert
 } from 'react-native';
 import { subscriptionService } from '../services/subscriptionService';
+import { errorService } from '../services/errorService';
 import { theme } from '../constants/theme';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/RootNavigator';
@@ -48,6 +49,7 @@ export default function PaywallScreen({ navigation }: Props) {
                 navigation.goBack();
             }
         } catch (error: any) {
+            errorService.handleError(error, 'PaywallScreen.handlePurchase');
             if (!error.userCancelled) {
                 Alert.alert('Fout', error.message || 'Aankoop mislukt.');
             }
@@ -67,6 +69,7 @@ export default function PaywallScreen({ navigation }: Props) {
                 Alert.alert('Geen aankopen', 'We hebben geen actieve Pro-abonnementen gevonden.');
             }
         } catch (error: any) {
+            errorService.handleError(error, 'PaywallScreen.handleRestore');
             Alert.alert('Fout', error.message || 'Herstellen mislukt.');
         } finally {
             setLoading(false);

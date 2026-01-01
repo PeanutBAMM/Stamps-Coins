@@ -26,9 +26,13 @@ export const offlineQueueService = {
             retryCount: 0,
         };
 
-        const queue = await this.getQueue();
-        queue.push(pendingScan);
-        await AsyncStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(queue));
+        try {
+            const queue = await this.getQueue();
+            queue.push(pendingScan);
+            await AsyncStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(queue));
+        } catch (error: any) {
+            errorService.handleError(error, 'offlineQueueService.addToQueue', { scanId: pendingScan.id });
+        }
 
         errorService.addBreadcrumb({
             category: 'offline',
@@ -45,7 +49,8 @@ export const offlineQueueService = {
         try {
             const data = await AsyncStorage.getItem(OFFLINE_QUEUE_KEY);
             return data ? JSON.parse(data) : [];
-        } catch {
+        } catch (error: any) {
+            errorService.handleError(error, 'offlineQueueService.getQueue');
             return [];
         }
     },
@@ -54,9 +59,13 @@ export const offlineQueueService = {
      * Remove a scan from queue after successful processing
      */
     async removeFromQueue(scanId: string): Promise<void> {
-        const queue = await this.getQueue();
-        const filtered = queue.filter(scan => scan.id !== scanId);
-        await AsyncStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(filtered));
+        try {
+            const queue = await this.getQueue();
+            const filtered = queue.filter(scan => scan.id !== scanId);
+            await AsyncStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(filtered));
+        } catch (error: any) {
+            errorService.handleError(error, 'offlineQueueService.removeFromQueue', { scanId });
+        }
     },
 
     /**
@@ -79,20 +88,28 @@ export const offlineQueueService = {
      * Clear entire queue (e.g., on successful sync)
      */
     async clearQueue(): Promise<void> {
-        await AsyncStorage.removeItem(OFFLINE_QUEUE_KEY);
+        try {
+            await AsyncStorage.removeItem(OFFLINE_QUEUE_KEY);
+        } catch (error: any) {
+            errorService.handleError(error, 'offlineQueueService.clearQueue');
+        }
     },
 
     /**
      * Increment retry count for a scan
      */
     async incrementRetry(scanId: string): Promise<void> {
-        const queue = await this.getQueue();
-        const updated = queue.map(scan =>
-            scan.id === scanId
-                ? { ...scan, retryCount: scan.retryCount + 1 }
-                : scan
-        );
-        await AsyncStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(updated));
+        try {
+            const queue = await this.getQueue();
+            const updated = queue.map(scan =>
+                scan.id === scanId
+                    ? { ...scan, retryCount: scan.retryCount + 1 }
+                    : scan
+            );
+            await AsyncStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(updated));
+        } catch (error: any) {
+            errorService.handleError(error, 'offlineQueueService.incrementRetry', { scanId });
+        }
     },
 
     /**

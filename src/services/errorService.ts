@@ -15,11 +15,14 @@ export const errorService = {
     /**
      * Capture and report an exception to Sentry
      */
-    captureException(error: Error, category: ErrorCategory = 'unknown', extras?: Record<string, any>) {
+    captureException(error: Error, category: ErrorCategory = 'unknown', extras?: Record<string, any>, tags?: Record<string, string>) {
         console.error(`[${category}] Error:`, error.message);
 
         Sentry.withScope((scope) => {
             scope.setTag('error_category', category);
+            if (tags) {
+                Object.entries(tags).forEach(([key, value]) => scope.setTag(key, value));
+            }
             if (extras) {
                 scope.setExtras(extras);
             }
@@ -59,19 +62,19 @@ export const errorService = {
     categorizeError(error: Error): ErrorCategory {
         const message = error.message.toLowerCase();
 
-        if (message.includes('network') || message.includes('fetch') || message.includes('timeout')) {
+        if (message.includes('network') || message.includes('fetch') || message.includes('timeout') || message.includes('offline')) {
             return 'network';
         }
-        if (message.includes('auth') || message.includes('session') || message.includes('token')) {
+        if (message.includes('auth') || message.includes('session') || message.includes('token') || message.includes('user')) {
             return 'auth';
         }
-        if (message.includes('scan') || message.includes('camera') || message.includes('image')) {
+        if (message.includes('scan') || message.includes('camera') || message.includes('image') || message.includes('manipulator')) {
             return 'scan';
         }
-        if (message.includes('payment') || message.includes('purchase') || message.includes('subscription')) {
+        if (message.includes('payment') || message.includes('purchase') || message.includes('subscription') || message.includes('revenuecat') || message.includes('offering')) {
             return 'payment';
         }
-        if (message.includes('supabase') || message.includes('database') || message.includes('query')) {
+        if (message.includes('supabase') || message.includes('database') || message.includes('query') || message.includes('postgres') || message.includes('pgrst')) {
             return 'database';
         }
 
@@ -81,9 +84,9 @@ export const errorService = {
     /**
      * Log and capture a categorized error
      */
-    handleError(error: Error, context?: string) {
+    handleError(error: Error, context?: string, extras?: Record<string, any>, tags?: Record<string, string>) {
         const category = this.categorizeError(error);
-        this.captureException(error, category, { context });
+        this.captureException(error, category, { context, ...extras }, tags);
     },
 };
 

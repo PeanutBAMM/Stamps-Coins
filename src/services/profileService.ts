@@ -1,41 +1,57 @@
 import { supabase } from '../api/supabase';
+import { errorService } from './errorService';
 
 export const profileService = {
     /**
      * Get Profile from database
      */
     async getProfile(userId: string) {
-        const { data, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', userId)
-            .single();
-        if (error) throw error;
-        return data;
+        try {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', userId)
+                .single();
+            if (error) throw error;
+            return data;
+        } catch (error: any) {
+            errorService.handleError(error, 'profileService.getProfile', { userId });
+            throw error;
+        }
     },
 
     /**
      * Update Profile in database
      */
     async updateProfile(userId: string, updates: any) {
-        const { data, error } = await supabase
-            .from('profiles')
-            .update(updates)
-            .eq('id', userId);
-        if (error) throw error;
-        return data;
+        try {
+            const { data, error } = await supabase
+                .from('profiles')
+                .update(updates)
+                .eq('id', userId);
+            if (error) throw error;
+            return data;
+        } catch (error: any) {
+            errorService.handleError(error, 'profileService.updateProfile', { userId });
+            throw error;
+        }
     },
 
     /**
      * Get item count for a user (placeholder logic for now)
      */
     async getItemCount(userId: string) {
-        const { count, error } = await supabase
-            .from('items')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', userId);
-        if (error) throw error;
-        return count || 0;
+        try {
+            const { count, error } = await supabase
+                .from('items')
+                .select('*', { count: 'exact', head: true })
+                .eq('user_id', userId);
+            if (error) throw error;
+            return count || 0;
+        } catch (error: any) {
+            errorService.handleError(error, 'profileService.getItemCount', { userId });
+            throw error;
+        }
     },
 
     /**
@@ -49,11 +65,16 @@ export const profileService = {
      * Update Profile Settings
      */
     async updateSettings(userId: string, settings: { currency?: string; region?: string }) {
-        const { data, error } = await supabase
-            .from('profiles')
-            .update(settings)
-            .eq('id', userId);
-        if (error) throw error;
-        return data;
+        try {
+            const { data, error } = await supabase
+                .from('profiles')
+                .update(settings)
+                .eq('id', userId);
+            if (error) throw error;
+            return data;
+        } catch (error: any) {
+            errorService.handleError(error, 'profileService.updateSettings', { userId });
+            throw error;
+        }
     }
 };

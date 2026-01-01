@@ -1,6 +1,7 @@
 import { supabase } from '../api/supabase';
 import { PortfolioHistory, PortfolioSummary, AssetPerformance } from '../types/portfolio.types';
 import { Item } from '../types/item.types';
+import { errorService } from './errorService';
 
 export const portfolioService = {
     /**
@@ -14,7 +15,7 @@ export const portfolioService = {
             .eq('user_id', userId);
 
         if (error) {
-            console.error('Error fetching total value:', error);
+            errorService.handleError(error, 'portfolioService.getTotalValue', { userId });
             throw error;
         }
 
@@ -46,7 +47,7 @@ export const portfolioService = {
             .single();
 
         if (error && error.code !== 'PGRST116') { // PGRST116 is "Row not found"
-            console.error('Error fetching portfolio history:', error);
+            errorService.handleError(error, 'portfolioService.get24hChange', { userId });
         }
 
         const previousTotal = history ? history.total_value : currentTotal; // Default to 0 change if no history
@@ -74,7 +75,7 @@ export const portfolioService = {
             .limit(days);
 
         if (error) {
-            console.error('Error fetching portfolio history:', error);
+            errorService.handleError(error, 'portfolioService.getHistory', { userId, days });
             throw error;
         }
 
@@ -101,7 +102,7 @@ export const portfolioService = {
             .limit(5);
 
         if (error) {
-            console.error('Error fetching top movers:', error);
+            errorService.handleError(error, 'portfolioService.getTopMovers', { userId });
             return [];
         }
 
@@ -144,7 +145,7 @@ export const portfolioService = {
             });
 
         if (error) {
-            console.error('Error recording daily snapshot:', error);
+            errorService.handleError(error, 'portfolioService.recordDailySnapshot', { userId });
         }
     }
 

@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { theme } from '../../constants/theme';
 import { authService } from '../../services/authService';
+import { errorService } from '../../services/errorService';
 
 export default function ForgotPasswordScreen({ navigation }: any) {
     const [email, setEmail] = useState('');
@@ -33,6 +34,7 @@ export default function ForgotPasswordScreen({ navigation }: any) {
                 [{ text: 'OK', onPress: () => navigation.goBack() }]
             );
         } catch (error: any) {
+            errorService.handleError(error, 'ForgotPasswordScreen.handleReset');
             Alert.alert('Fout', error.message || 'Herstellen mislukt.');
         } finally {
             setLoading(false);

@@ -1,6 +1,14 @@
 import { vaultService } from '../services/vaultService';
 import { supabase } from '../api/supabase';
 import { mockVaultStamps, mockFreeUser, mockUserVaults } from './fixtures';
+import { errorService } from '../services/errorService';
+
+jest.mock('../services/errorService', () => ({
+    errorService: {
+        handleError: jest.fn(),
+        addBreadcrumb: jest.fn(),
+    },
+}));
 
 jest.mock('../api/supabase', () => ({
     supabase: {

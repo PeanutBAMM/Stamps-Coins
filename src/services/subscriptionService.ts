@@ -7,6 +7,7 @@ import Purchases, {
 } from 'react-native-purchases';
 import { Platform } from 'react-native';
 import Constants from 'expo-constants';
+import { errorService } from './errorService';
 
 const REVENUECAT_API_KEY = process.env.EXPO_PUBLIC_REVENUECAT_API_KEY || '';
 const ENTITLEMENT_ID = 'Stamps & Coins Pro';
@@ -35,7 +36,8 @@ export const subscriptionService = {
                 await Purchases.configure({ apiKey: REVENUECAT_API_KEY, appUserID: userId || undefined });
             }
             console.log('[SubscriptionService] RevenueCat initialized successfully');
-        } catch (error) {
+        } catch (error: any) {
+            errorService.handleError(error, 'subscriptionService.initialize');
             console.error('[SubscriptionService] RevenueCat Configuration failed:', error);
         }
     },
@@ -48,7 +50,8 @@ export const subscriptionService = {
         try {
             const { customerInfo } = await Purchases.logIn(userId);
             return customerInfo;
-        } catch (error) {
+        } catch (error: any) {
+            errorService.handleError(error, 'subscriptionService.login', { userId });
             console.error('RevenueCat Login error:', error);
             throw error;
         }
@@ -66,7 +69,8 @@ export const subscriptionService = {
                 return offerings.current;
             }
             return null;
-        } catch (error) {
+        } catch (error: any) {
+            errorService.handleError(error, 'subscriptionService.getOfferings');
             console.error('Error fetching offerings:', error);
             return null;
         }
@@ -81,7 +85,8 @@ export const subscriptionService = {
         try {
             const customerInfo = await Purchases.getCustomerInfo();
             return typeof customerInfo.entitlements.active[ENTITLEMENT_ID] !== 'undefined';
-        } catch (error) {
+        } catch (error: any) {
+            errorService.handleError(error, 'subscriptionService.checkProStatus');
             console.error('Error checking pro status:', error);
             return false;
         }
@@ -98,6 +103,7 @@ export const subscriptionService = {
             return typeof customerInfo.entitlements.active[ENTITLEMENT_ID] !== 'undefined';
         } catch (error: any) {
             if (!error.userCancelled) {
+                errorService.handleError(error, 'subscriptionService.purchasePackage', { packageId: pack.identifier });
                 console.error('Purchase error:', error);
             }
             return false;
@@ -113,7 +119,8 @@ export const subscriptionService = {
         try {
             const customerInfo = await Purchases.restorePurchases();
             return typeof customerInfo.entitlements.active[ENTITLEMENT_ID] !== 'undefined';
-        } catch (error) {
+        } catch (error: any) {
+            errorService.handleError(error, 'subscriptionService.restorePurchases');
             console.error('Restore error:', error);
             return false;
         }

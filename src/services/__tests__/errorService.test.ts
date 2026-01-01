@@ -10,16 +10,26 @@ jest.mock('@sentry/react-native', () => ({
 }));
 
 describe('errorService', () => {
+    let mockScope: any;
+
     beforeEach(() => {
         jest.clearAllMocks();
+        mockScope = {
+            setTag: jest.fn(),
+            setExtras: jest.fn(),
+        };
+        (Sentry.withScope as jest.Mock).mockImplementation((callback) => callback(mockScope));
     });
 
     describe('captureException', () => {
-        it('should capture exception with category tag', () => {
+        it('should capture exception with category tag and extras', () => {
             const error = new Error('Test error');
-            errorService.captureException(error, 'network');
+            errorService.captureException(error, 'network', { some: 'extra' }, { custom: 'tag' });
 
             expect(Sentry.withScope).toHaveBeenCalled();
+            expect(mockScope.setTag).toHaveBeenCalledWith('error_category', 'network');
+            expect(mockScope.setTag).toHaveBeenCalledWith('custom', 'tag');
+            expect(mockScope.setExtras).toHaveBeenCalledWith({ some: 'extra' });
             expect(Sentry.captureException).toHaveBeenCalledWith(error);
         });
     });
@@ -61,13 +71,19 @@ describe('errorService', () => {
         const testCases: { message: string; expected: ErrorCategory }[] = [
             { message: 'Network request failed', expected: 'network' },
             { message: 'Fetch timeout', expected: 'network' },
+            { message: 'Offline connection', expected: 'network' },
             { message: 'Auth session expired', expected: 'auth' },
             { message: 'Invalid token', expected: 'auth' },
+            { message: 'User not found', expected: 'auth' },
             { message: 'Camera scan failed', expected: 'scan' },
             { message: 'Image processing error', expected: 'scan' },
+            { message: 'Image manipulator failed', expected: 'scan' },
             { message: 'Payment declined', expected: 'payment' },
             { message: 'Subscription not found', expected: 'payment' },
+            { message: 'RevenueCat error', expected: 'payment' },
             { message: 'Supabase query error', expected: 'database' },
+            { message: 'Postgres error', expected: 'database' },
+            { message: 'PGRST116 row not found', expected: 'database' },
             { message: 'Something went wrong', expected: 'unknown' },
         ];
 
@@ -80,10 +96,13 @@ describe('errorService', () => {
     });
 
     describe('handleError', () => {
-        it('should auto-categorize and capture error', () => {
+        it('should auto-categorize and capture error with context and tags', () => {
             const error = new Error('Network connection lost');
-            errorService.handleError(error, 'Dashboard loading');
+            errorService.handleError(error, 'Dashboard loading', { data: 123 }, { version: '1.0' });
 
+            expect(mockScope.setTag).toHaveBeenCalledWith('error_category', 'network');
+            expect(mockScope.setTag).toHaveBeenCalledWith('version', '1.0');
+            expect(mockScope.setExtras).toHaveBeenCalledWith({ context: 'Dashboard loading', data: 123 });
             expect(Sentry.captureException).toHaveBeenCalledWith(error);
         });
     });

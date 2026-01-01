@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { theme } from '../../constants/theme';
 import { authService } from '../../services/authService';
+import { errorService } from '../../services/errorService';
 import { loginSchema } from '../../utils/validation';
 
 export default function LoginScreen({ navigation }: any) {
@@ -40,6 +41,7 @@ export default function LoginScreen({ navigation }: any) {
         try {
             await authService.signIn(email, password);
         } catch (error: any) {
+            errorService.handleError(error, 'LoginScreen.handleLogin');
             Alert.alert('Fout', error.message || 'Inloggen mislukt.');
         } finally {
             setLoading(false);
@@ -51,6 +53,7 @@ export default function LoginScreen({ navigation }: any) {
         try {
             await authService.signInAnonymously();
         } catch (error: any) {
+            errorService.handleError(error, 'LoginScreen.handleGhostLogin');
             Alert.alert('Fout', error.message || 'Anoniem inloggen mislukt.');
         } finally {
             setGhostLoading(false);
