@@ -14,7 +14,7 @@ export const vaultService = {
                 .select(`
             *,
             items:items (count),
-            items_value:items (current_price)
+            items_value:items (market_price, manual_value)
           `)
                 .order('created_at', { ascending: false });
 
@@ -24,7 +24,10 @@ export const vaultService = {
             return (vaults || []).map((vault: any) => ({
                 ...vault,
                 item_count: vault.items[0]?.count || 0,
-                total_value: vault.items_value?.reduce((sum: number, item: any) => sum + (item.current_price || 0), 0) || 0,
+                total_value: vault.items_value?.reduce((sum: number, item: any) => {
+                    const price = item.manual_value ?? item.market_price ?? 0;
+                    return sum + Number(price);
+                }, 0) || 0,
             }));
         } catch (error: any) {
             errorService.handleError(error, 'vaultService.getVaults');

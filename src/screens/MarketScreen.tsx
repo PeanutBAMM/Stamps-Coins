@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl, SafeAreaView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Search, Filter } from 'lucide-react-native';
+import { Search, Filter, TrendingUp } from 'lucide-react-native';
 import NewsCard from '../components/market/NewsCard';
 import PriceAlert from '../components/market/PriceAlert';
 import { supabase } from '../api/supabase'; // Assuming this exists per guide
 import { BlurView } from 'expo-blur';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CoachMark } from '../components/CoachMark';
 
 // Mock data integration until Supabase/Edge Function is live
 const MOCK_NEWS = [
@@ -55,18 +57,46 @@ const MarketScreen: React.FC = () => {
     const [news, setNews] = useState<any[]>(MOCK_NEWS);
     const [loading, setLoading] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [isFirstVisit, setIsFirstVisit] = useState(false);
+
+    useEffect(() => {
+        const checkFirstVisit = async () => {
+            const hasVisited = await AsyncStorage.getItem('hasVisitedMarket');
+            if (!hasVisited) {
+                setIsFirstVisit(true);
+                await AsyncStorage.setItem('hasVisitedMarket', 'true');
+            }
+        };
+        checkFirstVisit();
+    }, []);
 
     const fetchNews = async () => {
         setLoading(true);
-        // TODO: Integrating Supabase here when Edge Function Works
-        // const { data, error } = await supabase.from('news_feed').select('*').order('published_at', { ascending: false });
-        // if (data) setNews(data);
+        try {
+            const { data, error } = await supabase
+                .from('news_feed')
+                .select('*')
+                .order('published_at', { ascending: false });
 
-        // Simulate network delay
-        setTimeout(() => {
+            if (error) throw error;
+
+            if (data && data.length > 0) {
+                setNews(data);
+            } else {
+                // Fallback to mock data if database is empty
+                setNews(MOCK_NEWS);
+            }
+        } catch (error) {
+            console.error('Error fetching news:', error);
+            setNews(MOCK_NEWS);
+        } finally {
             setLoading(false);
-        }, 1500);
+        }
     };
+
+    useEffect(() => {
+        fetchNews();
+    }, []);
 
     const filteredNews = selectedCategory === 'All'
         ? news
@@ -106,7 +136,15 @@ const MarketScreen: React.FC = () => {
 
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.header}>
-                    <Text style={styles.headerTitle}>Market Insights</Text>
+                    <View>
+                        <Text style={styles.headerTitle}>Market Insights</Text>
+                        {isFirstVisit && (
+                            <CoachMark
+                                text="Blijf op de hoogte"
+                                style={{ top: 40, left: 0 }}
+                            />
+                        )}
+                    </View>
                     <TouchableOpacity style={styles.iconButton}>
                         <Search color="#fff" size={24} />
                     </TouchableOpacity>

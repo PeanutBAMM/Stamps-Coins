@@ -8,7 +8,8 @@ import {
     SafeAreaView,
     FlatList,
     Image,
-    Animated
+    Animated,
+    ActivityIndicator
 } from 'react-native';
 import { theme } from '../../constants/theme';
 import { authService } from '../../services/authService';
@@ -77,11 +78,24 @@ export default function OnboardingScreen({ navigation }: any) {
 
     const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 
-    const handleNext = () => {
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+    const handleNext = async () => {
         if (currentIndex < ONBOARDING_PAGES.length - 1) {
             slidesRef.current?.scrollToIndex({ index: currentIndex + 1 });
         } else {
-            navigation.navigate('Login');
+            // Trigger Ghost Login on final slide
+            setIsLoggingIn(true);
+            try {
+                await authService.signInAnonymously();
+                // RootNavigator will automatically redirect to MainTabs on session update
+            } catch (error) {
+                console.error('Onboarding ghost login error:', error);
+                // Fallback to manual login if anonymous fails
+                navigation.navigate('Login');
+            } finally {
+                setIsLoggingIn(false);
+            }
         }
     };
 
@@ -168,13 +182,18 @@ export default function OnboardingScreen({ navigation }: any) {
                 <TouchableOpacity
                     style={[styles.button, { backgroundColor: ONBOARDING_PAGES[currentIndex].color }]}
                     onPress={handleNext}
+                    disabled={isLoggingIn}
                 >
-                    <Text style={styles.buttonText}>
-                        {currentIndex === ONBOARDING_PAGES.length - 1 ? 'Starten' : 'Volgende'}
-                    </Text>
+                    {isLoggingIn ? (
+                        <ActivityIndicator color="#fff" />
+                    ) : (
+                        <Text style={styles.buttonText}>
+                            {currentIndex === ONBOARDING_PAGES.length - 1 ? 'Starten' : 'Volgende'}
+                        </Text>
+                    )}
                 </TouchableOpacity>
             </View>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }
 

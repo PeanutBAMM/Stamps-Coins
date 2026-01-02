@@ -7,30 +7,22 @@ import { theme } from '../constants/theme';
 import * as Sentry from '@sentry/react-native';
 
 // Screens
-import DashboardScreen from '../screens/DashboardScreen';
-import ScannerScreen from '../screens/ScannerScreen';
-import VaultsScreen from '../screens/VaultsScreen';
+import { MainTabNavigator } from './MainTabNavigator';
+import OnboardingScreen from '../screens/onboarding/OnboardingScreen';
+import LoginScreen from '../screens/auth/LoginScreen';
+import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 import VaultDetailScreen from '../screens/VaultDetailScreen';
 import ItemDetailScreen from '../screens/ItemDetailScreen';
-import MarketScreen from '../screens/MarketScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import LoginScreen from '../screens/auth/LoginScreen';
-import OnboardingScreen from '../screens/onboarding/OnboardingScreen';
-import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
-import PaywallScreen from '../screens/PaywallScreen';
 import ExportScreen from '../screens/ExportScreen';
+import PaywallScreen from '../screens/PaywallScreen';
 
 export type RootStackParamList = {
     Onboarding: undefined;
     Login: undefined;
     ForgotPassword: { email?: string };
-    Dashboard: undefined;
-    Scanner: undefined;
-    Vaults: undefined;
+    MainTabs: undefined; // The container for Dashboard, Vaults, Scanner, Market, Profile
     VaultDetail: { vaultId: string; vaultName: string };
     ItemDetail: { itemId: string };
-    Market: undefined;
-    Profile: undefined;
     Export: undefined;
     Paywall: undefined;
 };
@@ -68,16 +60,13 @@ export const RootNavigator = ({ routingInstrumentation }: { routingInstrumentati
                     <>
                         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
                         <Stack.Screen name="Login" component={LoginScreen} />
+                        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
                     </>
                 ) : (
                     <>
-                        <Stack.Screen name="Dashboard" component={DashboardScreen} />
-                        <Stack.Screen name="Scanner" component={ScannerScreen} />
-                        <Stack.Screen name="Vaults" component={VaultsScreen} />
+                        <Stack.Screen name="MainTabs" component={MainTabNavigator} />
                         <Stack.Screen name="VaultDetail" component={VaultDetailScreen} />
                         <Stack.Screen name="ItemDetail" component={ItemDetailScreen} />
-                        <Stack.Screen name="Market" component={MarketScreen} />
-                        <Stack.Screen name="Profile" component={ProfileScreen} />
                         <Stack.Screen name="Export" component={ExportScreen} />
                         <Stack.Screen name="Paywall" component={PaywallScreen} />
                     </>

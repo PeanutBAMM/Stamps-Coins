@@ -8,9 +8,8 @@ export interface Item {
     description: string;
     category: string;
     image_url: string;
-    current_price: number;
     market_price: number;
-    manual_price?: number | null;
+    manual_value?: number | null;
     condition: ItemCondition;
     confidence_score: number;
     year?: number;
@@ -27,7 +26,7 @@ export interface UpdateItemDTO {
     name?: string;
     description?: string;
     vault_id?: string;
-    manual_price?: number | null;
+    manual_value?: number | null;
     ignore_market_updates?: boolean;
     condition?: ItemCondition;
 }

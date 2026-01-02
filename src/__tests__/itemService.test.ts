@@ -61,7 +61,7 @@ describe('itemService', () => {
 
     it('should set manual value', async () => {
         const manualPrice = 500.00;
-        const updatedItem = { ...mockCoinGold, manual_price: manualPrice };
+        const updatedItem = { ...mockCoinGold, manual_value: manualPrice };
 
         (supabase.from as jest.Mock).mockImplementation(() => ({
             update: jest.fn().mockReturnThis(),
@@ -71,6 +71,6 @@ describe('itemService', () => {
         }));
 
         const result = await itemService.setManualValue(mockCoinGold.id, manualPrice);
-        expect(result.manual_price).toBe(manualPrice);
+        expect(result.manual_value).toBe(manualPrice);
     });
 });

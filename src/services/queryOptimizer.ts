@@ -19,9 +19,9 @@ interface CacheEntry<T> {
  * Defines which columns to select by default to minimize data transfer
  */
 export const OPTIMIZED_SELECTS = {
-    items: 'id, vault_id, user_id, name, description, category, image_url, current_price, manual_price, market_price, condition, confidence_score, year, country, material, weight, created_at, updated_at, last_price_update, ignore_market_updates',
-    items_list: 'id, vault_id, user_id, name, description, category, image_url, current_price, manual_price, market_price, condition, confidence_score, created_at, updated_at',
-    items_value: 'id, current_price, manual_price, market_price',
+    items: 'id, vault_id, user_id, name, description, category, image_url, manual_value, market_price, condition, confidence_score, year, country, material, weight, created_at, updated_at, last_price_update, ignore_market_updates',
+    items_list: 'id, vault_id, user_id, name, description, category, image_url, manual_value, market_price, condition, confidence_score, created_at, updated_at',
+    items_value: 'id, manual_value, market_price',
     vaults: 'id, name, type, icon, color, created_at',
     vaults_with_count: 'id, name, type, icon, color, items:items(count)',
     profiles: 'id, username, pro_status, region, currency, item_count',

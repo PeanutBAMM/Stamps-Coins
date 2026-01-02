@@ -55,7 +55,7 @@ describe('vaultService', () => {
         const mockVaultsWithItems = mockUserVaults.map(v => ({
             ...v,
             items: [{ count: v.item_count || 0 }],
-            items_value: [{ current_price: v.total_value || 0 }],
+            items_value: [{ market_price: v.total_value || 0, manual_value: null }],
         }));
 
         (supabase.auth.getUser as jest.Mock).mockResolvedValue({ data: { user: { id: mockFreeUser.id } } });

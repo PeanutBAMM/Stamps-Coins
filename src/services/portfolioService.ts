@@ -11,7 +11,7 @@ export const portfolioService = {
     async getTotalValue(userId: string): Promise<number> {
         const { data: items, error } = await supabase
             .from('items')
-            .select('market_price, manual_price')
+            .select('market_price, manual_value')
             .eq('user_id', userId);
 
         if (error) {
@@ -22,7 +22,7 @@ export const portfolioService = {
         if (!items) return 0;
 
         return items.reduce((total, item) => {
-            const price = item.manual_price ?? item.market_price ?? 0;
+            const price = item.manual_value ?? item.market_price ?? 0;
             return total + Number(price);
         }, 0);
     },
@@ -98,7 +98,7 @@ export const portfolioService = {
             .from('items')
             .select('*')
             .eq('user_id', userId)
-            .order('current_price', { ascending: false }) // Assuming current_price is a consolidated field or market_price
+            .order('market_price', { ascending: false })
             .limit(5);
 
         if (error) {
@@ -111,7 +111,7 @@ export const portfolioService = {
             item_id: item.id,
             name: item.name,
             image_url: item.image_url,
-            current_value: item.manual_price ?? item.market_price ?? 0,
+            current_value: item.manual_value ?? item.market_price ?? 0,
             change_percentage: 0, // No history yet
             change_value: 0
         })) || [];

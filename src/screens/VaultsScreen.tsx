@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, RefreshControl, Alert } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, RefreshControl, Alert, SafeAreaView } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CoachMark } from '../components/CoachMark';
 import { useFocusEffect } from '@react-navigation/native';
 import { theme } from '../constants/theme';
 import { vaultService } from '../services/vaultService';
@@ -13,6 +15,18 @@ export default function VaultsScreen({ navigation }: any) {
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const [isCreateModalVisible, setCreateModalVisible] = useState(false);
+    const [isFirstVisit, setIsFirstVisit] = useState(false);
+
+    useEffect(() => {
+        const checkFirstVisit = async () => {
+            const hasVisited = await AsyncStorage.getItem('hasVisitedVaults');
+            if (!hasVisited) {
+                setIsFirstVisit(true);
+                await AsyncStorage.setItem('hasVisitedVaults', 'true');
+            }
+        };
+        checkFirstVisit();
+    }, []);
 
     // useFocusEffect to reload data when screen comes into focus
     useFocusEffect(
@@ -105,7 +119,15 @@ export default function VaultsScreen({ navigation }: any) {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.title}>Mijn Kluizen</Text>
+                <View>
+                    <Text style={styles.title}>Mijn Kluizen</Text>
+                    {isFirstVisit && (
+                        <CoachMark
+                            text="Organiseer je bezit"
+                            style={{ top: 40, left: 10 }}
+                        />
+                    )}
+                </View>
                 <TouchableOpacity
                     style={styles.addButton}
                     onPress={() => setCreateModalVisible(true)}

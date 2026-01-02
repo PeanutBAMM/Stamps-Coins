@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, RefreshControl, StatusBar, SafeAreaView, TouchableOpacity, Text } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,7 +8,9 @@ import { PortfolioSummary, AssetPerformance } from '../types/portfolio.types';
 import { PortfolioValue } from '../components/dashboard/PortfolioValue';
 import { TopMoversWidget } from '../components/dashboard/TopMoversWidget';
 import { NewsCarousel } from '../components/dashboard/NewsCarousel';
+import { CoachMark } from '../components/CoachMark';
 import { useRealtimePrices } from '../hooks/useRealtimePrices';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DashboardScreen = () => {
     const navigation = useNavigation<any>();
@@ -21,6 +23,21 @@ const DashboardScreen = () => {
     });
     const [topMovers, setTopMovers] = useState<AssetPerformance[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isFirstVisit, setIsFirstVisit] = useState(false);
+    const [showCTAPopup, setShowCTAPopup] = useState(false);
+
+    useEffect(() => {
+        const checkFirstVisit = async () => {
+            const hasVisited = await AsyncStorage.getItem('hasVisitedDashboardCTA');
+            if (!hasVisited) {
+                setIsFirstVisit(true);
+                // Delay showing the CTA popup
+                setTimeout(() => setShowCTAPopup(true), 1500);
+                await AsyncStorage.setItem('hasVisitedDashboardCTA', 'true');
+            }
+        };
+        checkFirstVisit();
+    }, []);
 
     const fetchData = useCallback(async () => {
         if (!session?.user?.id) return;
@@ -66,12 +83,20 @@ const DashboardScreen = () => {
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                 }
             >
-                <PortfolioValue
-                    totalValue={summary.total_value}
-                    changeValue={summary.change_24h_value}
-                    changePercentage={summary.change_24h_percentage}
-                    isLoading={isLoading && !refreshing && summary.total_value === 0}
-                />
+                <View style={styles.section}>
+                    <PortfolioValue
+                        totalValue={isFirstVisit && summary.total_value === 0 ? 12450.80 : summary.total_value}
+                        changeValue={isFirstVisit && summary.total_value === 0 ? 540.20 : summary.change_24h_value}
+                        changePercentage={isFirstVisit && summary.total_value === 0 ? 4.5 : summary.change_24h_percentage}
+                        isLoading={isLoading && !refreshing && summary.total_value === 0}
+                    />
+                    {isFirstVisit && (
+                        <CoachMark
+                            text="Dit is je cockpit"
+                            style={{ top: '60%', alignSelf: 'center' }}
+                        />
+                    )}
+                </View>
 
                 <TopMoversWidget
                     movers={topMovers}
@@ -88,6 +113,24 @@ const DashboardScreen = () => {
             <TouchableOpacity style={styles.fab} onPress={handleFabPress}>
                 <Ionicons name="camera" size={28} color="#fff" />
             </TouchableOpacity>
+
+            {showCTAPopup && (
+                <View style={styles.ctaContainer}>
+                    <TouchableOpacity
+                        style={styles.ctaContent}
+                        onPress={() => {
+                            setShowCTAPopup(false);
+                            handleFabPress();
+                        }}
+                    >
+                        <Text style={styles.ctaText}>Scan je eerste item</Text>
+                        <TouchableOpacity style={styles.ctaClose} onPress={() => setShowCTAPopup(false)}>
+                            <Ionicons name="close" size={16} color="#fff" />
+                        </TouchableOpacity>
+                    </TouchableOpacity>
+                    <View style={styles.ctaArrow} />
+                </View>
+            )}
         </SafeAreaView>
     );
 };
@@ -101,6 +144,10 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         paddingBottom: 20,
+    },
+    section: {
+        position: 'relative',
+        width: '100%',
     },
     fab: {
         position: 'absolute',
@@ -117,5 +164,41 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 4,
         elevation: 5,
+    },
+    ctaContainer: {
+        position: 'absolute',
+        bottom: 90,
+        right: 24,
+        alignItems: 'flex-end',
+    },
+    ctaContent: {
+        backgroundColor: '#007AFF', // Match FAB
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        borderRadius: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+    },
+    ctaText: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 14,
+    },
+    ctaClose: {
+        padding: 2,
+    },
+    ctaArrow: {
+        width: 0,
+        height: 0,
+        backgroundColor: 'transparent',
+        borderStyle: 'solid',
+        borderLeftWidth: 10,
+        borderRightWidth: 10,
+        borderTopWidth: 10,
+        borderLeftColor: 'transparent',
+        borderRightColor: 'transparent',
+        borderTopColor: '#007AFF',
+        marginRight: 18, // Center with FAB
     },
 });

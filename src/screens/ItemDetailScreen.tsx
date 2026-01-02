@@ -1,5 +1,7 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Alert, ActivityIndicator, Modal } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CoachMark } from '../components/CoachMark';
 import { useFocusEffect } from '@react-navigation/native';
 import { theme } from '../constants/theme';
 import { itemService } from '../services/itemService';
@@ -18,6 +20,18 @@ export default function ItemDetailScreen({ navigation, route }: any) {
     const [suggestionModalVisible, setSuggestionModalVisible] = useState(false);
     const [vaults, setVaults] = useState<Vault[]>([]);
     const [moveModalVisible, setMoveModalVisible] = useState(false);
+    const [isFirstVisit, setIsFirstVisit] = useState(false);
+
+    useEffect(() => {
+        const checkFirstVisit = async () => {
+            const hasVisited = await AsyncStorage.getItem('hasVisitedItemDetail');
+            if (!hasVisited) {
+                setIsFirstVisit(true);
+                await AsyncStorage.setItem('hasVisitedItemDetail', 'true');
+            }
+        };
+        checkFirstVisit();
+    }, []);
 
     useFocusEffect(
         useCallback(() => {
@@ -106,7 +120,7 @@ export default function ItemDetailScreen({ navigation, route }: any) {
                 }
             ],
             'plain-text',
-            item?.manual_price?.toString() || item?.current_price.toString()
+            item?.manual_value?.toString() || item?.market_price.toString()
         );
     };
 
@@ -149,6 +163,12 @@ export default function ItemDetailScreen({ navigation, route }: any) {
                         <View style={{ flex: 1 }}>
                             <Text style={styles.category}>{item.category} • {item.country} {item.year}</Text>
                             <Text style={styles.title}>{item.name}</Text>
+                            {isFirstVisit && (
+                                <CoachMark
+                                    text="Diepe duik in elk object"
+                                    style={{ top: 40, left: 0 }}
+                                />
+                            )}
                         </View>
                         <ConditionBadge condition={item.condition} confidence={item.confidence_score} />
                     </View>
@@ -156,10 +176,10 @@ export default function ItemDetailScreen({ navigation, route }: any) {
                     <View style={styles.priceContainer}>
                         <View>
                             <Text style={styles.priceLabel}>
-                                {item.manual_price ? 'Handmatige Waarde' : 'Huidige Marktwaarde'}
+                                {item.manual_value ? 'Handmatige Waarde' : 'Huidige Marktwaarde'}
                             </Text>
                             <Text style={styles.price}>
-                                € {(item.manual_price ?? item.current_price).toFixed(2)}
+                                € {(item.manual_value ?? item.market_price).toFixed(2)}
                             </Text>
                         </View>
                         <TouchableOpacity style={styles.editButton} onPress={handleManualPrice}>
@@ -168,9 +188,9 @@ export default function ItemDetailScreen({ navigation, route }: any) {
                     </View>
 
                     <PriceChart data={[
-                        { date: '2024-01', price: item.current_price * 0.9 },
-                        { date: '2024-02', price: item.current_price * 0.95 },
-                        { date: '2024-03', price: item.current_price }
+                        { date: '2024-01', price: item.market_price * 0.9 },
+                        { date: '2024-02', price: item.market_price * 0.95 },
+                        { date: '2024-03', price: item.market_price }
                     ]} />
 
                     <View style={styles.specsContainer}>
@@ -190,8 +210,8 @@ export default function ItemDetailScreen({ navigation, route }: any) {
             <PriceSuggestionModal
                 visible={suggestionModalVisible}
                 onClose={() => setSuggestionModalVisible(false)}
-                currentPrice={item.current_price}
-                newPrice={item.current_price * 1.15} // Mock update
+                currentPrice={item.market_price}
+                newPrice={item.market_price * 1.15} // Mock update
                 onAccept={async () => {
                     // Update logic (mock)
                     setSuggestionModalVisible(false);

@@ -1,4 +1,4 @@
- # 📋 Stamps & Coins - Development Task List
+ # 📋 Stamps & Coins - Development Task List (v0.1 - Base App)
 
 > **Gerelateerd:** [Blueprint](file:///c:/Users/peanu/.gemini/antigravity/scratch/Stamps%20&%20Coins/STAMPS_COINS_BLUEPRINT.md) | [Implementation Plan](file:///C:/Users/peanu/.gemini/antigravity/brain/d7d3a14c-e92b-4333-9a4c-cb627b638045/implementation_plan.md)
 
@@ -269,7 +269,7 @@
 - [x] **RC-006** `handle-revenuecat-webhook/index.ts` - Signature validatie
 - [x] **RC-007** `handle-revenuecat-webhook/index.ts` - Event parsing
 - [x] **RC-008** `handle-revenuecat-webhook/index.ts` - pro_status update
-- [x] **RC-009** `handle-revenuecat-webhook/index.ts` - Event logging
+- [x] **RC-009** `handle-revenuecat-webhook/index.ts" - Event logging
 
 ### Pro Feature Gating
 - [x] **PRO-001** `useProStatus.ts` hook
@@ -282,11 +282,14 @@
 - [x] **EXP-002** `ExportScreen.tsx` - PDF export button (Pro only)
 - [x] **EXP-003** `ExportScreen.tsx` - Export history
 - [x] **EXP-004** `generate-export/index.ts` - CSV generatie
-- [x] **EXP-005** `generate-export/index.ts` - PDF generatie
+- [x] **EXP-005** `generate-export/index.ts" - PDF generatie
 
 ---
 
-## ✨ Sprint 7: Modernized Sentry & Full-Scope Logging (Week 13)
+## ✨ Sprint 7: Modernized Sentry & Full-Scope Logging (Week 13) - [COMPLETED v0.1]
+
+> [!NOTE]
+> We are now using the **Sentry MCP** for advanced troubleshooting and AI-powered root cause analysis. During Sprint 9, we will evaluate if we can fully move away from the custom `scripts/sentry-feedback.ts` in favor of the MCP tools.
 
 ### Unit Tests
 - [x] **TEST-001** `itemService.test.ts`
@@ -348,7 +351,50 @@
 
 ---
 
-## 🚀 Sprint 8: App Store Prep & Final Launch (Week 14)
+## 🔧 Sprint 7.5: Stabilization & Sentry Fixes (Hotfixes)
+
+- [x] **BF-001** Database Schema Alignment: Renamed `manual_price` -> `manual_value` & `current_price` -> `market_price` across all services/types/tests. (`REACT-NATIVE-Q`, `REACT-NATIVE-P`, `REACT-NATIVE-J`)
+- [x] **BF-002** Profile Currency fix: Added missing `currency` column to `profiles` table to prevent settings crash. (`REACT-NATIVE-11`)
+- [x] **BF-003** Export Recovery: Created `images` storage bucket and RLS policies to fix `generate-export` Edge Function failures. (`REACT-NATIVE-12`)
+- [x] **BF-004** Deep Clean: Resolved persistent `current_price` errors in `vaultService.ts` and `queryOptimizer.ts`. (`REACT-NATIVE-J`, `REACT-NATIVE-10`, `REACT-NATIVE-Z`)
+- [x] **BF-005** Component alignment: Fixed `ItemDetailScreen`, `VaultDetailScreen` and `ProfileScreen` display logic.
+
+---
+
+## 🚀 Sprint 9: App Navigation & Enhanced Onboarding (Week 14)
+
+### App Navigator
+- [x] **NAV-001** Implement Bottom Tab Navigator (Dashboard, Scanner, Vaults, Market)
+- [x] **NAV-002** Design custom tab bar with glassmorphism style
+- [x] **NAV-003** Integrate FAB (Floating Action Button) for Scanner in tab bar
+
+### Enhanced Onboarding & Ghost Login
+- [x] **ONB-009** Ghost login auto-trigger on onboarding finish (Direct to Dashboard)
+- [x] **ONB-010** Implement "First Visit" logic for Dashboard coach marks
+- [x] **ONB-011** Highlighted dashboard sections with mock-to-real transition
+
+### Live Market Data
+- [x] **NEWS-014** Connect `MarketScreen.tsx` to live `news_feed` Supabase table
+- [x] **NEWS-015** Implement Pull-to-refresh for real-time news updates
+
+---
+
+## 🔍 Sprint 8: Core Flow Check & Integration Testing (Current)
+
+### App Flow Verification
+- [ ] **FLOW-001** End-to-end walkthrough of the "Happy Path" (Login -> Scan -> Vault -> Dashboard)
+- [ ] **FLOW-002** Verify Sentry MCP integration and AI analysis capabilities
+- [ ] **FLOW-003** Test offline queuing for scans
+- [ ] **FLOW-004** Verify RevenueCat gating (Free vs Pro)
+- [ ] **FLOW-005** Check UI consistency across main screens
+
+### Optimization & Tech Debt
+- [ ] **OPT-001** Evaluate removal of legacy `sentry-feedback.ts`
+- [ ] **OPT-002** Minor UI polish based on walkthrough observations
+
+---
+
+## 🚀 App Store Prep & Final Launch (Final Release)
 
 ### App Store Prep
 - [ ] **STORE-001** App icon (1024x1024)
@@ -380,6 +426,7 @@
 ### Testing Infrastructure
 - [x] **TEST-EXT-001** Database Integration Tests (Real DB with seed/teardown)
 - [x] **TEST-EXT-002** E2E Testing with Maestro (Implemented & Passing)
+- [ ] **MAINT-001** Implement `testID`s and `accessibilityLabel`s for all core components (Better Sentry tracking & E2E)
 
 ---
 
@@ -395,8 +442,11 @@
 | Sprint 5 | 13 | [x] 100% |
 | Sprint 6 | 22 | [x] 100% |
 | Sprint 7 | 44 | [x] 100% |
-| Sprint 8 | 19 | [ ] 0% |
-| **Totaal** | **241 taken** | **~92% voltooid** |
+| Sprint 7.5 | 5 | [x] 100% |
+| Sprint 9 | 9 | [x] 100% |
+| Sprint 8 | 7 | [ ] 0% |
+| App Store Prep | 19 | [ ] 0% |
+| **Totaal** | **262 taken** | **~90% voltooid** |
 
 ---
 

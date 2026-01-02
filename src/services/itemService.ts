@@ -75,14 +75,14 @@ export const itemService = {
      * Set a manual price override
      */
     async setManualValue(id: string, price: number): Promise<Item> {
-        return this.updateItem(id, { manual_price: price });
+        return this.updateItem(id, { manual_value: price });
     },
 
     /**
    * Remove manual price override
    */
     async clearManualValue(id: string): Promise<Item> {
-        return this.updateItem(id, { manual_price: null });
+        return this.updateItem(id, { manual_value: null });
     },
 
     /**

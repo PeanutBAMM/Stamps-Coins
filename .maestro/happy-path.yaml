@@ -1,7 +1,7 @@
 appId: host.exp.exponent
 ---
 - launchApp
-- openLink: exp://10.0.2.2:8081
+- openLink: exp://10.0.2.2:8082
 - extendedWaitUntil:
     visible: "Uw Cockpit"
     timeout: 20000

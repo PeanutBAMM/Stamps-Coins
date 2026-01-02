@@ -52,7 +52,7 @@ export default function VaultDetailScreen({ route, navigation }: any) {
                     />
                     <View style={styles.gridContent}>
                         <Text style={styles.itemName} numberOfLines={1}>{item.name}</Text>
-                        <Text style={styles.itemPrice}>€ {item.current_price?.toFixed(2) || '0.00'}</Text>
+                        <Text style={styles.itemPrice}>€ {item.market_price?.toFixed(2) || '0.00'}</Text>
                     </View>
                 </TouchableOpacity>
             );
@@ -74,7 +74,7 @@ export default function VaultDetailScreen({ route, navigation }: any) {
                     <Text style={styles.itemName}>{item.name}</Text>
                     <Text style={styles.itemDescription} numberOfLines={1}>{item.description}</Text>
                 </View>
-                <Text style={styles.itemPrice}>€ {item.current_price?.toFixed(2) || '0.00'}</Text>
+                <Text style={styles.itemPrice}>€ {item.market_price?.toFixed(2) || '0.00'}</Text>
             </TouchableOpacity>
         );
     };
