@@ -1,0 +1,34 @@
+{
+    "name": "StampsCoins Dev Container",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash"
+            },
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode",
+                "expo.expo-vscode",
+                "ms-azuretools.vscode-docker",
+                "tamasfe.even-better-toml",
+                "denoland.vscode-deno"
+            ]
+        }
+    },
+    "forwardPorts": [
+        8081,
+        54321,
+        54323
+    ],
+    "postCreateCommand": "npm install && supabase --version && expo --version",
+    "remoteUser": "node",
+    "containerEnv": {
+        "CHOKIDAR_USEPOLLING": "true",
+        "SENTRY_DSN": "https://1e49252d46837eec4a749039fba24a55@o4510631175782400.ingest.de.sentry.io/4510631177814096",
+        "SENTRY_ENVIRONMENT": "development"
+    }
+}

@@ -361,7 +361,17 @@
 
 ---
 
-## 🚀 Sprint 9: App Navigation & Enhanced Onboarding (Week 14)
+## 📸 Sprint 7.6: Fire-and-Forget Scanner Flow (Hotfix)
+
+- [ ] **SCAN-FF-001** Global Toast System (`ToastContext.tsx`, `Toast.tsx`)
+- [ ] **SCAN-FF-002** Integrate ToastProvider in `App.tsx`
+- [ ] **SCAN-FF-003** `ScannerScreen.tsx` - Implement "Fire-and-Forget" logic (Snap -> Back -> Background Process)
+- [ ] **SCAN-FF-004** `ScannerScreen.tsx` - Create missing "Mijn Collectie" vault via Edge Function logic
+- [ ] **SCAN-FF-005** `ScannerScreen.tsx` - Fix CameraView nesting warning
+
+---
+
+## 🚀 Sprint 8: App Navigation & Enhanced Onboarding (Week 14)
 
 ### App Navigator
 - [x] **NAV-001** Implement Bottom Tab Navigator (Dashboard, Scanner, Vaults, Market)
@@ -379,7 +389,7 @@
 
 ---
 
-## 🔍 Sprint 8: Core Flow Check & Integration Testing (Current)
+## 🔍 Sprint 9: Core Flow Check & Integration Testing (Current)
 
 ### App Flow Verification
 - [ ] **FLOW-001** End-to-end walkthrough of the "Happy Path" (Login -> Scan -> Vault -> Dashboard)
@@ -443,10 +453,11 @@
 | Sprint 6 | 22 | [x] 100% |
 | Sprint 7 | 44 | [x] 100% |
 | Sprint 7.5 | 5 | [x] 100% |
+| Sprint 7.6 | 5 | [ ] 0% |
 | Sprint 9 | 9 | [x] 100% |
 | Sprint 8 | 7 | [ ] 0% |
 | App Store Prep | 19 | [ ] 0% |
-| **Totaal** | **262 taken** | **~90% voltooid** |
+| **Totaal** | **267 taken** | **~90% voltooid** |
 
 ---
 

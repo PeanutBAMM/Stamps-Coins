@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, TextInput, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraView, useCameraPermissions, CameraType, FlashMode } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -12,17 +13,24 @@ import { ProcessingDock, ProcessingStatus } from '../components/ProcessingDock';
 import { useAuth } from '../hooks/useAuth';
 import { useProStatus } from '../hooks/useProStatus';
 import { imageService } from '../services/imageService';
+import { aiService } from '../services/aiService';
 import { profileService } from '../services/profileService';
 import { errorService } from '../services/errorService';
-import { RootStackParamList } from '../navigation/RootNavigator';
+import { RootStackParamList, MainTabParamList } from '../navigation/RootNavigator'; // Import MainTabParamList
+import { useToast } from '../context/ToastContext';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { CompositeNavigationProp } from '@react-navigation/native';
 
-type ScannerScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Scanner'>;
+type ScannerScreenNavigationProp = CompositeNavigationProp<
+    BottomTabNavigationProp<MainTabParamList, 'Scanner'>,
+    NativeStackNavigationProp<RootStackParamList>
+>;
 
 export default function ScannerScreen() {
     const [permission, requestPermission] = useCameraPermissions();
     const [facing, setFacing] = useState<CameraType>('back');
     const [flash, setFlash] = useState<FlashMode>('off');
-    const [status, setStatus] = useState<ProcessingStatus>('idle');
+    const [status, setStatus] = useState<ProcessingStatus>('idle'); // Kept for local UI state if needed, though mostly toast driven now
     const [statusMessage, setStatusMessage] = useState('');
     const [lastPhoto, setLastPhoto] = useState<string | null>(null);
     const [itemCount, setItemCount] = useState(0);
@@ -30,6 +38,7 @@ export default function ScannerScreen() {
     const navigation = useNavigation<ScannerScreenNavigationProp>();
     const { user } = useAuth();
     const { isPro } = useProStatus();
+    const { showToast } = useToast();
 
     useEffect(() => {
         if (user) {
@@ -61,9 +70,8 @@ export default function ScannerScreen() {
 
         try {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-            setStatus('processing');
-            setStatusMessage('Foto maken...');
 
+            // 1. Take Picture
             const photo = await cameraRef.current.takePictureAsync({
                 quality: 0.8,
                 base64: false,
@@ -71,27 +79,52 @@ export default function ScannerScreen() {
             });
 
             if (photo) {
-                setLastPhoto(photo.uri);
-                setStatusMessage('Analyseren...');
-                const result = await imageService.processPhoto(photo.uri);
+                // 2. Process Photo (Resize/Copy) safely BEFORE navigating back
+                // This prevents race conditions where CameraView might clean up temp files on unmount
+                const processedUri = await imageService.processPhoto(photo.uri);
 
-                if (result) {
-                    setStatus('success');
-                    setStatusMessage('Herkenning voltooid!');
-                    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-                    setTimeout(() => setStatus('idle'), 1500);
-                    setItemCount(prev => prev + 1);
-                } else {
-                    throw new Error('Geen resultaat');
-                }
+                // 3. Fire and Forget!
+                // Navigate back immediately
+                navigation.goBack();
+
+                // Show immediate feedback to user
+                showToast('Foto wordt verwerkt...', 'loading');
+
+                // 4. AI Process in Background
+                processInBackground(processedUri);
             }
         } catch (error: any) {
             errorService.handleError(error, 'ScannerScreen.handleCapture');
             console.error('Capture error:', error);
-            setStatus('error');
-            setStatusMessage('Fout bij maken foto');
+            showToast('Fout bij maken foto', 'error');
+        }
+    };
+
+    const processInBackground = async (uri: string) => {
+        try {
+            console.log('Background processing started for:', uri);
+
+            // B. AI Identification (Upload + Identify)
+            const result = await aiService.processScan(uri);
+
+            if (result.success && result.identification) {
+                // Success!
+                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                console.log('Scan success:', result.identification.name);
+                showToast(`Succes! ${result.identification.name} aangemaakt.`, 'success');
+
+                // Note: No need to setItemCount here as screen is unmounted
+            } else {
+                // Pass the full error object if available, otherwise create a new Error
+                const errorToThrow = result.error instanceof Error ? result.error : new Error(result.error as any || 'Herkenning mislukt');
+                throw errorToThrow;
+            }
+
+        } catch (error: any) {
+            console.error('Background processing failed:', error);
+            errorService.handleError(error, 'ScannerScreen.processInBackground');
             Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-            setTimeout(() => setStatus('idle'), 2000);
+            showToast('Niet herkend. Probeer opnieuw.', 'error');
         }
     };
 
@@ -123,55 +156,132 @@ export default function ScannerScreen() {
     const isLocked = status === 'processing';
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-                <TouchableOpacity style={styles.iconButton} onPress={() => navigation.goBack()}>
-                    <Ionicons name="close" size={28} color="#fff" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.iconButton} onPress={toggleFlash}>
-                    <MaterialIcons name={flash === 'on' ? 'flash-on' : 'flash-off'} size={24} color={flash === 'on' ? theme.colors.warning : '#fff'} />
-                </TouchableOpacity>
+        <View style={styles.container}>
+            {/* Camera View as Background */}
+            <CameraView ref={cameraRef} style={StyleSheet.absoluteFill} facing={facing} flash={flash} />
+
+            {/* Overlay Layers - Absolutely Positioned */}
+            <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+                <SafeAreaView style={styles.uiContainer} pointerEvents="box-none">
+
+                    <View style={styles.header}>
+                        <TouchableOpacity style={styles.iconButton} onPress={() => navigation.goBack()}>
+                            <Ionicons name="close" size={28} color="#fff" />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.iconButton} onPress={toggleFlash}>
+                            <MaterialIcons name={flash === 'on' ? 'flash-on' : 'flash-off'} size={24} color={flash === 'on' ? theme.colors.warning : '#fff'} />
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* AR Overlay - Sibling to CameraView now, properly positioned */}
+                    <View style={styles.overlayContainer} pointerEvents="none">
+                        <AROverlay isDetecting={!isLocked} itemCount={itemCount} />
+                    </View>
+
+                    <View style={styles.controls}>
+                        <TouchableOpacity style={styles.thumbnailButton} disabled={true}>
+                            {lastPhoto && <Image source={{ uri: lastPhoto }} style={styles.thumbnail} />}
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={[styles.captureOuter, isLocked && styles.disabledButton]} onPress={handleCapture} disabled={isLocked}>
+                            <View style={styles.captureInner} />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.iconButton} onPress={toggleCameraFacing}>
+                            <MaterialIcons name="flip-camera-ios" size={24} color="#fff" />
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* Optional: Keep ProcessingDock if we want visible feedback before navigation, likely unused in Fire-n-Forget but good to keep code for now */}
+                    {/* <ProcessingDock status={status} message={statusMessage} /> */}
+
+                </SafeAreaView>
             </View>
-
-            <View style={styles.cameraContainer}>
-                <CameraView ref={cameraRef} style={styles.camera} facing={facing} flash={flash}>
-                    <AROverlay isDetecting={!isLocked} itemCount={itemCount} />
-                </CameraView>
-            </View>
-
-            <View style={styles.controls}>
-                <TouchableOpacity style={styles.thumbnailButton} disabled={true}>
-                    {lastPhoto && <Image source={{ uri: lastPhoto }} style={styles.thumbnail} />}
-                </TouchableOpacity>
-
-                <TouchableOpacity style={[styles.captureOuter, isLocked && styles.disabledButton]} onPress={handleCapture} disabled={isLocked}>
-                    <View style={styles.captureInner} />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.iconButton} onPress={toggleCameraFacing}>
-                    <MaterialIcons name="flip-camera-ios" size={24} color="#fff" />
-                </TouchableOpacity>
-            </View>
-
-            <ProcessingDock status={status} message={statusMessage} />
-        </SafeAreaView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#000' },
-    permissionContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.colors.background, padding: 20 },
-    message: { textAlign: 'center', color: theme.colors.text, fontSize: 16, marginBottom: 20 },
-    permissionButton: { backgroundColor: theme.colors.primary, padding: 15, borderRadius: 8 },
-    permissionButtonText: { color: '#fff', fontWeight: 'bold' },
-    header: { flexDirection: 'row', justifyContent: 'space-between', padding: 16, position: 'absolute', top: 40, left: 0, right: 0, zIndex: 10 },
-    iconButton: { width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
-    cameraContainer: { flex: 1 },
-    camera: { flex: 1 },
-    controls: { position: 'absolute', bottom: 40, left: 0, right: 0, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', paddingHorizontal: 30 },
-    captureOuter: { width: 80, height: 80, borderRadius: 40, borderWidth: 4, borderColor: 'rgba(255,255,255,0.5)', justifyContent: 'center', alignItems: 'center' },
-    captureInner: { width: 64, height: 64, borderRadius: 32, backgroundColor: '#fff' },
-    disabledButton: { opacity: 0.5 },
-    thumbnailButton: { width: 50, height: 50, borderRadius: 8, backgroundColor: 'rgba(255,255,255,0.2)', overflow: 'hidden' },
-    thumbnail: { width: '100%', height: '100%' },
+    container: {
+        flex: 1,
+        backgroundColor: '#000',
+    },
+    uiContainer: {
+        flex: 1,
+        justifyContent: 'space-between',
+    },
+    permissionContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#000',
+    },
+    message: {
+        color: '#fff',
+        fontSize: 16,
+        marginBottom: 20,
+    },
+    permissionButton: {
+        backgroundColor: theme.colors.primary,
+        padding: 12,
+        borderRadius: 8,
+    },
+    permissionButtonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 16,
+    },
+    iconButton: {
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    overlayContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    controls: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        paddingBottom: 40,
+        paddingHorizontal: 20,
+    },
+    captureOuter: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        borderWidth: 4,
+        borderColor: '#fff',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    captureInner: {
+        width: 64,
+        height: 64,
+        borderRadius: 32,
+        backgroundColor: '#fff',
+    },
+    disabledButton: {
+        opacity: 0.5,
+    },
+    thumbnailButton: {
+        width: 44,
+        height: 44,
+        borderRadius: 8,
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        overflow: 'hidden',
+    },
+    thumbnail: {
+        width: '100%',
+        height: '100%',
+    },
 });

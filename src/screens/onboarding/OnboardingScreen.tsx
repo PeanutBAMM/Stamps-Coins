@@ -1,16 +1,6 @@
 import React, { useState, useRef } from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-    TouchableOpacity,
-    Dimensions,
-    SafeAreaView,
-    FlatList,
-    Image,
-    Animated,
-    ActivityIndicator
-} from 'react-native';
+import { View, Text, StyleSheet, Dimensions, FlatList, TouchableOpacity, Image, Animated, ActivityIndicator } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { theme } from '../../constants/theme';
 import { authService } from '../../services/authService';
 import { CoachMark } from '../../components/CoachMark';

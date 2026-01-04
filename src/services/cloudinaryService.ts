@@ -9,6 +9,11 @@ export const uploadImage = async (fileUri: string) => {
     try {
         console.log('Uploading to Cloudinary:', fileUri);
 
+        if (!cloudName || !uploadPreset) {
+            console.error('Missing Cloudinary configuration:', { cloudName, uploadPreset });
+            throw new Error('Cloudinary configuration missing (cloud name or upload preset)');
+        }
+
         const formData = new FormData();
         // @ts-ignore - React Native FormData expects an object for file
         formData.append('file', {
@@ -23,7 +28,7 @@ export const uploadImage = async (fileUri: string) => {
             body: formData,
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data',
+                // Content-Type header is set automatically with boundary for FormData
             },
         });
 

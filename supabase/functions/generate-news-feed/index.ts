@@ -1,16 +1,13 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.7"
 import { DOMParser } from "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
+import { corsHeaders, getServiceRoleClient, handleError, handleSuccess, initSentry } from "../_shared/utils.ts";
 
-const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+// Initialize Sentry
+initSentry();
 
 const RSS_FEEDS = [
     { url: "https://www.coinworld.com/rss/news", category: "coin", source: "CoinWorld" },
     { url: "https://www.linns.com/rss/news", category: "stamp", source: "Linn's Stamp News" },
-    // Add more feeds as needed
 ];
 
 serve(async (req) => {
@@ -19,15 +16,11 @@ serve(async (req) => {
     }
 
     try {
-        const supabaseClient = createClient(
-            Deno.env.get('SUPABASE_URL') ?? '',
-            Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-        )
-
+        const supabaseClient = getServiceRoleClient();
         const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY')
         if (!GEMINI_API_KEY) throw new Error('GEMINI_API_KEY is not configured')
 
-        const allArticles = [];
+        const allArticles: any[] = [];
 
         // 1. Fetch and Parse RSS Feeds
         for (const feed of RSS_FEEDS) {
@@ -35,13 +28,13 @@ serve(async (req) => {
                 const response = await fetch(feed.url);
                 const text = await response.text();
                 const parser = new DOMParser();
-                const doc = parser.parseFromString(text, "text/html"); // RSS is XML, but HTML parser often works for simple extracting
+                const doc = parser.parseFromString(text, "text/html");
 
                 if (!doc) continue;
 
                 const items = doc.querySelectorAll("item");
-                items.forEach((item, index) => {
-                    if (index > 5) return; // Limit to latest 5 per feed to save tokens
+                items.forEach((item: any, index: number) => {
+                    if (index > 5) return;
                     const title = item.querySelector("title")?.textContent || "";
                     const link = item.querySelector("link")?.textContent || "";
                     const desc = item.querySelector("description")?.textContent || "";
@@ -50,7 +43,7 @@ serve(async (req) => {
                         allArticles.push({
                             title,
                             link,
-                            description: desc.substring(0, 200), // Truncate
+                            description: desc.substring(0, 200),
                             source: feed.source,
                             category: feed.category,
                             original_published: item.querySelector("pubDate")?.textContent
@@ -63,7 +56,7 @@ serve(async (req) => {
         }
 
         if (allArticles.length === 0) {
-            return new Response(JSON.stringify({ message: "No articles found" }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
+            return handleSuccess({ message: "No articles found", processed: 0 });
         }
 
         // 2. Curate with Gemini
@@ -83,7 +76,7 @@ serve(async (req) => {
             "source_name": "String",
             "source_url": "String",
             "category": "String",
-            "image_url": "String (use specific placeholder if none: 'https://via.placeholder.com/300?text=News')" 
+            "image_url": "String (use specific placeholder: 'https://via.placeholder.com/300?text=News')" 
         }
 
         Input Articles:
@@ -116,21 +109,14 @@ serve(async (req) => {
                     category: item.category,
                     image_url: item.image_url,
                     published_at: new Date().toISOString()
-                }, { onConflict: 'title' }) // Simple dedup on title
+                }, { onConflict: 'title' })
 
             if (!error) results.push(item.title);
         }
 
-        return new Response(
-            JSON.stringify({ success: true, processed: results.length, items: results }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return handleSuccess({ processed: results.length, items: results });
 
-    } catch (error) {
-        console.error(error)
-        return new Response(
-            JSON.stringify({ success: false, error: error.message }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
-        )
+    } catch (error: any) {
+        return await handleError(error, req);
     }
 })

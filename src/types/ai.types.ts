@@ -28,5 +28,5 @@ export interface ProcessScanResponse {
     success: boolean;
     itemId?: string;
     identification?: AIIdentificationResult;
-    error?: string;
+    error?: any;
 }

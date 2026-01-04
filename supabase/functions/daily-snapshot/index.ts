@@ -1,9 +1,8 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { getServiceRoleClient, handleError, handleSuccess, initSentry } from "../_shared/utils.ts"
 
-const supabaseUrl = Deno.env.get('SUPABASE_URL')
-const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
-
-const supabase = createClient(supabaseUrl, supabaseKey)
+// Initialize Sentry
+initSentry();
 
 /**
  * Daily Snapshot Edge Function
@@ -11,22 +10,22 @@ const supabase = createClient(supabaseUrl, supabaseKey)
  * - Calculates total portfolio value for all users
  * - Inserts into portfolio_history
  */
-Deno.serve(async (req) => {
+serve(async (req) => {
     try {
+        const supabase = getServiceRoleClient();
+
         // 1. Get all users
         const { data: users, error: userError } = await supabase.auth.admin.listUsers()
-
         if (userError) throw userError
 
         console.log(`Processing snapshots for ${users.users.length} users...`)
-
         const results = []
 
         for (const user of users.users) {
             // 2. Calculate Total Value for User
             const { data: items, error: itemsError } = await supabase
                 .from('items')
-                .select('market_price, manual_price')
+                .select('market_price, manual_value')
                 .eq('user_id', user.id)
 
             if (itemsError) {
@@ -35,7 +34,7 @@ Deno.serve(async (req) => {
             }
 
             const totalValue = items?.reduce((sum, item) => {
-                const price = item.manual_price ?? item.market_price ?? 0
+                const price = item.manual_value ?? item.market_price ?? 0
                 return sum + Number(price)
             }, 0) || 0
 
@@ -60,14 +59,9 @@ Deno.serve(async (req) => {
             }
         }
 
-        return new Response(
-            JSON.stringify({ success: true, processed: results.length, details: results }),
-            { headers: { 'Content-Type': 'application/json' } },
-        )
-    } catch (error) {
-        return new Response(
-            JSON.stringify({ success: false, error: error.message }),
-            { headers: { 'Content-Type': 'application/json' }, status: 500 },
-        )
+        return handleSuccess({ processed: results.length, details: results });
+
+    } catch (error: any) {
+        return await handleError(error, req);
     }
 })

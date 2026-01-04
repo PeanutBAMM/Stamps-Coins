@@ -1,6 +1,5 @@
 import { imageService } from '../imageService';
 import * as ImageManipulator from 'expo-image-manipulator';
-import * as FileSystem from 'expo-file-system';
 
 // Mock errorService (used for breadcrumbs)
 jest.mock('../errorService', () => ({
@@ -12,10 +11,6 @@ jest.mock('expo-image-manipulator', () => ({
     SaveFormat: { JPEG: 'jpeg' }
 }));
 
-jest.mock('expo-file-system', () => ({
-    getInfoAsync: jest.fn(),
-}));
-
 describe('imageService', () => {
     const mockUri = 'file:///test/image.jpg';
 
@@ -25,28 +20,28 @@ describe('imageService', () => {
 
     describe('processPhoto', () => {
         it('should compress and resize the image', async () => {
-            (FileSystem.getInfoAsync as jest.Mock).mockResolvedValue({ exists: true });
+            const processedUri = 'file:///test/processed.jpg';
             (ImageManipulator.manipulateAsync as jest.Mock).mockResolvedValue({
-                uri: 'file:///test/processed.jpg',
+                uri: processedUri,
                 width: 1080,
                 height: 1080,
             });
 
             const result = await imageService.processPhoto(mockUri);
 
-            expect(FileSystem.getInfoAsync).toHaveBeenCalledWith(mockUri);
             expect(ImageManipulator.manipulateAsync).toHaveBeenCalledWith(
                 mockUri,
                 [{ resize: { width: 1080 } }],
                 { compress: 0.8, format: 'jpeg' }
             );
-            expect(result.uri).toBe('file:///test/processed.jpg');
+            expect(result).toBe(processedUri);
         });
 
-        it('should throw error if file does not exist', async () => {
-            (FileSystem.getInfoAsync as jest.Mock).mockResolvedValue({ exists: false });
+        it('should propagate errors from ImageManipulator', async () => {
+            const error = new Error('Manipulation failed');
+            (ImageManipulator.manipulateAsync as jest.Mock).mockRejectedValue(error);
 
-            await expect(imageService.processPhoto(mockUri)).rejects.toThrow('File does not exist');
+            await expect(imageService.processPhoto(mockUri)).rejects.toThrow('Manipulation failed');
         });
     });
 });

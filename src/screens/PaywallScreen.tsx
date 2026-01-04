@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-    TouchableOpacity,
-    ScrollView,
-    SafeAreaView,
-    ActivityIndicator,
-    Alert
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, ActivityIndicator, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { subscriptionService } from '../services/subscriptionService';
 import { errorService } from '../services/errorService';
 import { theme } from '../constants/theme';

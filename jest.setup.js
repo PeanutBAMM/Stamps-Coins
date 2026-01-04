@@ -3,9 +3,14 @@ import * as Sentry from '@sentry/node';
 
 // Initialize Sentry for Test Environment
 Sentry.init({
-    dsn: 'https://1e49252d46837eec4a749039fba24a55@o4510631175782400.ingest.de.sentry.io/4510631177814096',
+    dsn: process.env.SENTRY_DSN || 'https://1e49252d46837eec4a749039fba24a55@o4510631175782400.ingest.de.sentry.io/4510631177814096',
     environment: 'test',
     tracesSampleRate: 1.0,
+    transport: () => ({
+        send: () => Promise.resolve({ status: 'success' }),
+        flush: () => Promise.resolve(true),
+        close: () => Promise.resolve(true),
+    }),
 });
 
 // Mock Sentry React Native to prevent crashes in Jest

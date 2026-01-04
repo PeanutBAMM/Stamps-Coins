@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, RefreshControl, StatusBar, SafeAreaView, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, ScrollView, RefreshControl, StatusBar, TouchableOpacity, Text } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../hooks/useAuth';

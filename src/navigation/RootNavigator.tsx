@@ -4,7 +4,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ActivityIndicator, View } from 'react-native';
 import { useAuth } from '../hooks/useAuth';
 import { theme } from '../constants/theme';
-import * as Sentry from '@sentry/react-native';
 
 // Screens
 import { MainTabNavigator } from './MainTabNavigator';
@@ -16,11 +15,19 @@ import ItemDetailScreen from '../screens/ItemDetailScreen';
 import ExportScreen from '../screens/ExportScreen';
 import PaywallScreen from '../screens/PaywallScreen';
 
+export type MainTabParamList = {
+    Dashboard: undefined;
+    Vaults: undefined;
+    Scanner: undefined;
+    Market: undefined;
+    Profile: undefined;
+};
+
 export type RootStackParamList = {
     Onboarding: undefined;
     Login: undefined;
     ForgotPassword: { email?: string };
-    MainTabs: undefined; // The container for Dashboard, Vaults, Scanner, Market, Profile
+    MainTabs: undefined;
     VaultDetail: { vaultId: string; vaultName: string };
     ItemDetail: { itemId: string };
     Export: undefined;

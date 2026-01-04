@@ -22,7 +22,10 @@ export const itemService = {
             .eq('vault_id', vaultId)
             .order('created_at', { ascending: false });
 
-        if (error) throw error;
+        if (error) {
+            errorService.handleError(error, 'itemService.getItemsByVault', { vaultId });
+            throw error;
+        }
 
         // Cache result for 1 minute
         await queryOptimizer.setCache(cacheKey, data, 60000);
@@ -68,7 +71,10 @@ export const itemService = {
             .delete()
             .eq('id', id);
 
-        if (error) throw error;
+        if (error) {
+            errorService.handleError(error, 'itemService.deleteItem', { id });
+            throw error;
+        }
     },
 
     /**

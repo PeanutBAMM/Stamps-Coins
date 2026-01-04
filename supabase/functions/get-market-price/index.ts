@@ -1,10 +1,8 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.7"
+import { corsHeaders, getSupabaseClients, handleError, handleSuccess, initSentry } from "../_shared/utils.ts"
 
-const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+// Initialize Sentry
+initSentry();
 
 serve(async (req) => {
     if (req.method === 'OPTIONS') {
@@ -12,11 +10,7 @@ serve(async (req) => {
     }
 
     try {
-        const supabaseClient = createClient(
-            Deno.env.get('SUPABASE_URL') ?? '',
-            Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-        )
-
+        const { supabaseClient } = getSupabaseClients(req)
         const { itemId } = await req.json()
         if (!itemId) throw new Error('itemId is required')
 
@@ -55,7 +49,6 @@ serve(async (req) => {
         const marketResult = JSON.parse(geminiData.candidates[0].content.parts[0].text)
 
         // 3. Update market_prices table (cache)
-        // We need the global_asset_id first
         const { data: globalAsset } = await supabaseClient
             .from('global_assets')
             .select('id')
@@ -80,16 +73,9 @@ serve(async (req) => {
             .update({ market_price: marketResult.price, last_modified_at: new Date().toISOString() })
             .eq('id', itemId)
 
-        return new Response(
-            JSON.stringify(marketResult),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return handleSuccess(marketResult);
 
-    } catch (error) {
-        console.error(error)
-        return new Response(
-            JSON.stringify({ error: error.message }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
-        )
+    } catch (error: any) {
+        return await handleError(error, req);
     }
 })

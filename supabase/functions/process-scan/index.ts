@@ -1,10 +1,8 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.7"
+import { corsHeaders, getSupabaseClients, handleError, handleSuccess, initSentry } from "../_shared/utils.ts"
 
-const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+// Initialize Sentry
+initSentry();
 
 serve(async (req) => {
     if (req.method === 'OPTIONS') {
@@ -12,11 +10,7 @@ serve(async (req) => {
     }
 
     try {
-        const supabaseClient = createClient(
-            Deno.env.get('SUPABASE_URL') ?? '',
-            Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
-            { global: { headers: { Authorization: req.headers.get('Authorization')! } } }
-        )
+        const { supabaseClient, supabaseAdmin } = getSupabaseClients(req)
 
         const { data: { user }, error: authError } = await supabaseClient.auth.getUser()
         if (authError || !user) throw new Error('User not authenticated')
@@ -28,7 +22,7 @@ serve(async (req) => {
             .eq('id', user.id)
             .single()
 
-        if (profile && !profile.pro_status && profile.item_count >= 35) {
+        if (profile && !profile.pro_status && (profile.item_count || 0) >= 35) {
             return new Response(
                 JSON.stringify({ success: false, error: 'LIMIT_REACHED', message: 'Je hebt je gratis limiet van 35 items bereikt. Upgrade naar Pro voor onbeperkt scannen!' }),
                 { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 403 }
@@ -54,7 +48,7 @@ serve(async (req) => {
     - confidence (0-1)
     - metadata (object for technical specs)`
 
-        const geminiResp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        const geminiResp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -73,7 +67,7 @@ serve(async (req) => {
         const idResult = JSON.parse(geminiData.candidates[0].content.parts[0].text)
 
         // 3. Manage Global Assets (Deduplication)
-        const { data: asset, error: assetError } = await supabaseClient
+        const { data: asset, error: assetError } = await supabaseAdmin
             .from('global_assets')
             .upsert({
                 asset_identifier: idResult.asset_identifier,
@@ -95,7 +89,7 @@ serve(async (req) => {
             .single()
 
         // 5. Create User Item
-        const { data: newItem, error: itemError } = await supabaseClient
+        const { data: newItem, error: itemError } = await supabaseAdmin
             .from('items')
             .insert({
                 user_id: user.id,
@@ -113,21 +107,14 @@ serve(async (req) => {
         if (itemError) throw itemError
 
         // 6. Increment Profile Item Count
-        await supabaseClient
+        await supabaseAdmin
             .from('profiles')
             .update({ item_count: (profile?.item_count || 0) + 1 })
             .eq('id', user.id)
 
-        return new Response(
-            JSON.stringify({ success: true, itemId: newItem.id, identification: idResult }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return handleSuccess({ itemId: newItem.id, identification: idResult })
 
-    } catch (error) {
-        console.error(error)
-        return new Response(
-            JSON.stringify({ success: false, error: 'UNKNOWN_ERROR', message: error.message }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
-        )
+    } catch (error: any) {
+        return await handleError(error, req)
     }
 })

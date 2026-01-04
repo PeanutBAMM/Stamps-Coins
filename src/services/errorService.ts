@@ -16,6 +16,12 @@ export const errorService = {
      * Capture and report an exception to Sentry
      */
     captureException(error: Error, category: ErrorCategory = 'unknown', extras?: Record<string, any>, tags?: Record<string, string>) {
+        // Ignore specific noisy errors
+        if (error.message.includes('Cannot connect to Metro')) {
+            console.warn('[Sentry Ignored] Metro connection error');
+            return;
+        }
+
         console.error(`[${category}] Error:`, error.message);
 
         Sentry.withScope((scope) => {

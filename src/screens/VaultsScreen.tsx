@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, RefreshControl, Alert, SafeAreaView } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, FlatList, RefreshControl, Alert, Text } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CoachMark } from '../components/CoachMark';
 import { useFocusEffect } from '@react-navigation/native';

@@ -1,27 +1,27 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.0";
+import { getServiceRoleClient, handleError, handleSuccess, initSentry } from "../_shared/utils.ts";
 
-const REVENUECAT_SECRET = Deno.env.get("REVENUECAT_WEBHOOK_SECRET");
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+// Initialize Sentry
+initSentry();
 
 serve(async (req) => {
-    // 1. Validate Secret Header
-    const authHeader = req.headers.get("Authorization");
-    if (authHeader !== REVENUECAT_SECRET && authHeader !== `Bearer ${REVENUECAT_SECRET}`) {
-        return new Response("Unauthorized", { status: 401 });
-    }
-
     try {
+        const REVENUECAT_SECRET = Deno.env.get("REVENUECAT_WEBHOOK_SECRET");
+
+        // 1. Validate Secret Header
+        const authHeader = req.headers.get("Authorization");
+        if (authHeader !== REVENUECAT_SECRET && authHeader !== `Bearer ${REVENUECAT_SECRET}`) {
+            return new Response("Unauthorized", { status: 401 });
+        }
+
+        const supabase = getServiceRoleClient();
         const { event } = await req.json();
         const { type, app_user_id } = event;
 
         console.log(`Received event: ${type} for user: ${app_user_id}`);
 
         if (!app_user_id) {
-            return new Response("No user_id", { status: 200 }); // Ignore
+            return handleSuccess({ message: "No user_id, ignored" });
         }
 
         let proStatus = false;
@@ -39,10 +39,8 @@ serve(async (req) => {
                 proStatus = false;
                 break;
             default:
-                // Other events (e.g. TEST) don't change status directly without entitlements check
-                // But for MVP we can log them.
                 console.log(`Unhandled event type: ${type}`);
-                return new Response("Event logged", { status: 200 });
+                return handleSuccess({ message: "Event logged, no status change" });
         }
 
         // 3. Update Profile
@@ -51,18 +49,13 @@ serve(async (req) => {
             .update({ pro_status: proStatus })
             .eq("id", app_user_id);
 
-        if (error) {
-            console.error("Database update failed:", error);
-            return new Response("Database error", { status: 500 });
-        }
+        if (error) throw error;
 
-        // 4. Log Event (Accessory)
         console.log(`Updated pro_status to ${proStatus} for user ${app_user_id}`);
 
-        return new Response("Webook processed", { status: 200 });
+        return handleSuccess({ status: 'updated', userId: app_user_id, proStatus });
 
-    } catch (err) {
-        console.error("Webhook processing failed:", err);
-        return new Response("Server error", { status: 500 });
+    } catch (error: any) {
+        return await handleError(error, req);
     }
 });

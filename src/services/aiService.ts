@@ -1,6 +1,7 @@
 import { supabase } from '../api/supabase';
 import { ProcessScanResponse, MarketPriceResult } from '../types/ai.types';
 import cloudinaryService from './cloudinaryService';
+import errorService from './errorService';
 
 export const aiService = {
     /**
@@ -14,6 +15,7 @@ export const aiService = {
             const uploadResult = await cloudinaryService.uploadImage(imageUri);
             const imageUrl = uploadResult.secure_url;
 
+
             // 2. Call Supabase Edge Function 'process-scan'
             console.log('AI Service: Triggering process-scan edge function...');
             const { data, error } = await supabase.functions.invoke('process-scan', {
@@ -21,7 +23,19 @@ export const aiService = {
             });
 
             if (error) {
-                console.error('Edge Function error:', error);
+                errorService.handleError(error as Error, 'aiService.processScan.edgeFunction');
+
+                // Try to get the response context
+                const errorAny = error as any;
+                if (errorAny.context && typeof errorAny.context.json === 'function') {
+                    try {
+                        const jsonBody = await errorAny.context.json();
+                        console.error('Edge Function Response Body:', JSON.stringify(jsonBody));
+                    } catch (e) {
+                        console.error('Could not extract response body');
+                    }
+                }
+
                 throw error;
             }
 
@@ -31,10 +45,10 @@ export const aiService = {
                 identification: data.identification,
             };
         } catch (error: any) {
-            console.error('AI Service processScan failed:', error);
+            errorService.handleError(error instanceof Error ? error : new Error(String(error)), 'aiService.processScan.catch');
             return {
                 success: false,
-                error: error.message || 'Onbekende fout tijdens het scannen',
+                error: error,
             };
         }
     },
@@ -51,7 +65,7 @@ export const aiService = {
             if (error) throw error;
             return data;
         } catch (error) {
-            console.error('AI Service getMarketPrice failed:', error);
+            errorService.handleError(error instanceof Error ? error : new Error(String(error)), 'aiService.getMarketPrice');
             return null;
         }
     }

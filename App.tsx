@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as Sentry from '@sentry/react-native';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { subscriptionService } from './src/services/subscriptionService';
 import { AuthProvider } from './src/hooks/useAuth';
+import { ToastProvider } from './src/context/ToastContext';
+import * as Linking from 'expo-linking';
 
 // Polyfill for navigator.userAgent which is sometimes missing in Expo Go
 // and required by some versions of RevenueCat (react-native-purchases)
@@ -13,6 +17,8 @@ if (typeof navigator === 'undefined') {
 } else if (!navigator.userAgent) {
   (navigator as any).userAgent = 'Expo/StampsCoins';
 }
+
+import { SENTRY_CONFIG } from './src/config/sentry';
 
 const isJest = !!process.env.JEST_WORKER_ID;
 
@@ -33,20 +39,7 @@ const routingInstrumentation = shouldInitSentry
 
 if (shouldInitSentry) {
   Sentry.init({
-    dsn: 'https://1e49252d46837eec4a749039fba24a55@o4510631175782400.ingest.de.sentry.io/4510631177814096',
-    debug: false,
-    sendDefaultPii: true,
-    enableLogs: true,
-    environment: process.env.NODE_ENV || 'development',
-
-    // Performance & Profiling (Dec 2025 Best Practice)
-    tracesSampleRate: 1.0,
-    profilesSampleRate: 1.0,
-
-    // Session Replay
-    replaysSessionSampleRate: 0.1,
-    replaysOnErrorSampleRate: 1,
-
+    ...SENTRY_CONFIG,
     integrations: [
       Sentry.mobileReplayIntegration(),
       Sentry.feedbackIntegration(),
@@ -64,10 +57,8 @@ if (shouldInitSentry) {
   }
 } else if (isExpoGo) {
   // Expo Go: Initialize Sentry with JS-only config (no native modules)
-  // This ensures console.error/warn interceptors still send to Sentry
   Sentry.init({
-    dsn: 'https://1e49252d46837eec4a749039fba24a55@o4510631175782400.ingest.de.sentry.io/4510631177814096',
-    debug: false,
+    ...SENTRY_CONFIG,
     environment: 'expo-go-development',
     enableNative: false, // Disable native crash reporting
     enableNativeNagger: false, // Don't show warning about native
@@ -80,46 +71,8 @@ if (shouldInitSentry) {
   console.log('[Sentry] Running in Jest - Sentry disabled');
 }
 
-// Enhanced Sentry interceptor to capture errors and warnings with better visibility
-const originalConsoleError = console.error;
-const originalConsoleWarn = console.warn;
-
-const captureToSentry = (level: Sentry.SeverityLevel, ...args: any[]) => {
-  const messageChunks = args.map(arg => {
-    if (arg instanceof Error) return arg.message;
-    if (typeof arg === 'object') {
-      try {
-        return JSON.stringify(arg, null, 2);
-      } catch (e) {
-        return String(arg);
-      }
-    }
-    return String(arg);
-  });
-
-  const fullMessage = messageChunks.join(' ');
-  const title = messageChunks[0] || 'Empty Log';
-
-  if (args[0] instanceof Error) {
-    Sentry.captureException(args[0], { level, extra: { fullMessage } });
-  } else {
-    Sentry.captureMessage(fullMessage, {
-      level,
-      tags: { log_title: title.substring(0, 100) },
-      fingerprint: [title] // Force separate issues for different log titles
-    });
-  }
-};
-
-console.error = (...args: any[]) => {
-  captureToSentry('error', ...args);
-  originalConsoleError(...args);
-};
-
-console.warn = (...args: any[]) => {
-  captureToSentry('warning', ...args);
-  originalConsoleWarn(...args);
-};
+// Note: Console interceptors for Sentry are now handled by standard Sentry integrations.
+// Explicit error reporting should be done via errorService.handleError().
 
 function App() {
   useEffect(() => {
@@ -135,11 +88,17 @@ function App() {
   }, []);
 
   return (
-    <Sentry.ErrorBoundary fallback={<View><StatusBar style="light" /></View>}>
-      <AuthProvider>
-        <StatusBar style="light" />
-        <RootNavigator routingInstrumentation={routingInstrumentation} />
-      </AuthProvider>
+    <Sentry.ErrorBoundary fallback={<View style={{ flex: 1, backgroundColor: '#000' }}><StatusBar style="light" /></View>}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <AuthProvider>
+            <ToastProvider>
+              <StatusBar style="light" />
+              <RootNavigator routingInstrumentation={routingInstrumentation} />
+            </ToastProvider>
+          </AuthProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
     </Sentry.ErrorBoundary>
   );
 }
